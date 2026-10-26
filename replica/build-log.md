@@ -67,3 +67,7 @@ No se cambiaron fuentes de tokens, Design o Architect; se añadieron estilos D01
 ## D01 — validación con cuenta existente (2026-10-26)
 
 Superada la validación positiva de login UI, getUser remoto, `/app`, recarga, logout y denegación posterior, conservando exactamente el borrador local D02. Corregido únicamente el origen de redirección en proxy para evitar cambiar entre 127.0.0.1 y localhost; origen validado por allowlist y Host ajeno probado. 37 Playwright correctos, TypeScript, ESLint y build correctos. Sin cuentas nuevas, cambio de contraseña, correos, capturas/trazas de cuenta o servicios configurados. Evidencia y límites en backend.md y auth-live-validation.json. No se modifican Recon, Architect ni Design; la matriz histórica permanece intacta. PR #2 abierto, sin merge; esperar aprobación.
+
+## Base de datos — fase 1 (2026-10-26)
+
+`feat/brand-data-foundation` desde main actualizado con Auth integrado. Cuatro tablas y RPCs SQL de tenancy/perfil/revisiones preparados, sin frontend ni migraciones remotas. RLS, roles, FKs compuestas, bootstrap atómico y concurrencia probados en PostgreSQL local: 163 aserciones, repetidas tras reconstrucción desde cero. 34 regresiones de navegador, TypeScript, lint y build correctos. [Detalle y límites de evidencia](brand-data-foundation.md). No equivale a implementar D04 ni conectar D02 a la base; Architect/Design/Recon intactos. PR para revisión, sin merge; esperar aprobación antes de aplicar a Supabase.

@@ -111,3 +111,11 @@ NODE_USE_ENV_PROXY=1 node scripts/auth-smoke.mjs
 ```
 
 Lee settings y comprueba rechazo de credenciales inválidas en dominio reservado; nunca registra usuarios ni solicita emails. No sustituye prueba de login correcto. Resultados y checklist en `replica/backend.md`. Capturas D01 en `replica/clone-screens/auth/`. El caso completo con cuenta propia y correo debe ejecutarse después según la guía; no pegar contraseña o enlaces de verificación en chats/issues.
+
+### Pruebas locales de la base de datos (sin despliegue)
+
+```bash
+npm run test:db
+```
+
+Requiere Docker. Crea un PostgreSQL desechable, sin red/puertos ni claves de Supabase; prueba las migraciones, RLS e integridad con identidades sintéticas y elimina el contenedor. No toca `linde-dev`. Alcance, contratos y límites en [replica/brand-data-foundation.md](replica/brand-data-foundation.md). No aplicar migraciones remotas hasta aprobar el PR de esta fase.

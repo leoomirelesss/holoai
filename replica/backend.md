@@ -73,3 +73,11 @@ El recorrido real se ejecuta en proceso aislado, sin trazas, capturas, vídeos n
 Pendientes: registro/confirmación y recuperación por correo completos (no ejecutados por instrucción), refresco tras expiración y revocación en otro dispositivo. Una recarga correcta no demuestra esos dos últimos casos. Site URL, Redirect URLs, plantillas, SMTP y límites efectivos siguen requiriendo revisión del propietario según esta guía; no se modificaron servicios.
 
 Repetición: tras compilar, ejecutar `CI=1 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e` con las variables seguras disponibles. Sin credenciales, el caso `auth-live` se omite explícitamente; nunca se considera validado. No utilizar capturas o trazas para esa cuenta.
+
+## Fase 1 de datos — marcas/Brand DNA (2026-10-26)
+
+Preparadas, **sin aplicar a linde-dev**, cuatro tablas: workspaces, memberships, brands y brand_revisions. RLS de lectura por pertenencia activa; escrituras exclusivamente mediante RPCs con identidad verificada y permisos transaccionales. Bootstrap atómico/idempotente; revisiones nuevas para cada guardado, aprobación owner-only y bloqueo optimista. No cambios de frontend, Auth o esquema remoto.
+
+Validación: 163 aserciones SQL locales repetidas en otra base vacía; dos conexiones concurrentes verifican deduplicación de bootstrap y rechazo de versión obsoleta. Dos usuarios sintéticos aislados, anónimos sin acceso, FKs compuestas y permisos comprobados. PostgreSQL local real con fixture mínimo de Auth, no stack Supabase completo ni evidencia de aplicación remota. 34 regresiones Playwright, TypeScript, ESLint y build correctos; casos remotos de Auth no repetidos en esta fase. [Decisiones, comandos, resultados y límites](brand-data-foundation.md).
+
+Pendientes de aprobación: aplicar migraciones y validar con stack/roles/JWT reales del destino en una etapa autorizada. No se avanzan módulos de producto, IA, jobs ni UI de Brand DNA.

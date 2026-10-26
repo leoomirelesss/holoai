@@ -13,7 +13,8 @@
     "start": "node scripts/next.mjs start --hostname 0.0.0.0",
     "typecheck": "node scripts/next.mjs typegen && tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:db": "node scripts/test-brand-data.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "5.3.0",

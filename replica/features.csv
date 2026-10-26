@@ -64,7 +64,7 @@ Revisar artículos y metadatos SEO,seo,could,yes,no,Documentado; D37; Título me
 Publicar SEO en WordPress Shopify o web propia,integraciones,could,yes,no,Documentado; D21; Un destino SEO activo por marca; WordPress 5.6+/HTTPS; Shopify requiere blog.
 Entregar artículos SEO por webhook autenticado,integraciones,could,yes,no,Documentado; D22; HTTPS POST JSON; bearer/HMAC; test; publicado/actualizado. No es una API general de generación.
 Consultar métricas SEO estimadas y aprendizajes,analitica,could,yes,no,Documentado; D38; Clicks keywords tráfico backlinks; explícitamente no procede directamente de Search Console.
-Acceder por Google código de email o contraseña,cuenta,should,yes,no,Documentado; D45; Código de seis dígitos; reenvío tras 120 segundos.
+Acceder por Google código de email o contraseña,cuenta,should,yes,partial,Documentado; D45; Código de seis dígitos; reenvío tras 120 segundos. Auth real correo/contraseña implementada con Supabase SSR; Google y código OTP no implementados; verificación/recuperación por enlace; prueba positiva y entrega pendientes sin cuenta de prueba.
 Gestionar varias marcas separadas,cuenta,could,yes,no,Documentado; D25/M02; Límites por plan contradictorios: ayuda 3/5/ilimitadas frente a pricing 1/3.
 Invitar equipo con roles y acceso por marca,cuenta,could,yes,no,Documentado; D24; Owner/Member; no confirma colaboración simultánea de edición.
 Consultar créditos y adquirir top-ups,cuenta,should,yes,no,Documentado; D23/M02; Reglas de grants rollover y planes incompatibles; confirmar antes de presupuestar.

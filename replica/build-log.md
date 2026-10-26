@@ -1,0 +1,55 @@
+# Build — frontend foundation y D02
+
+Fecha:2026-10-26. Rama:`feat/ui-foundation`. Alcance aprobado: Next.js App Router + TypeScript estricto + Tailwind, tokens, primitivas, shell/navegación responsive y D02 URL/manual. No autorización para D01,D03,D04 u otras pantallas/backend. Las fases aprobadas se han leído; no se modifican arquitectura ni especificaciones de Design.
+
+## Resultado dentro del alcance
+
+| Área | Estado | Evidencia / límite |
+| --- | --- | --- |
+| Toolchain | Implementado | Next16.4.3, React19.3.1, Tailwind4.3.3, TypeScript5.9.3; versiones fijadas y package-lock; Node24.19.0 en validación |
+| Tokens | Implementado | Generador a partir de replica/design/tokens.json, variables rem y theme Tailwind; build rechaza desincronización. Fuente aprobada intacta |
+| Tipografía/iconos | Implementado | Inter variable Latin, carga local sin Google/CDN; licencia OFL conservada; iconos geométricos propios |
+| Primitivas usadas | Implementado | Button primary/secondary/ghost; input/textarea con label/hint/error/ref; Card/Badge/Notice/Icon; sin librería UI ni dependencias no utilizadas |
+| Shell y navegación | Implementado | Header/footer, skip link, navegación modal con foco contenido/restaurado, Escape y bloqueo de scroll; variante workspace con sidebar responsive para reutilización, sin ruta nueva ni pantallas ficticias |
+| D02 URL | Implementado en alcance UI; funcionalidad Recon parcial | Formulario, HTTPS y formato, foco de error; guardar/reabrir/eliminar/descargar borrador local. Nunca fetch a URL ni supuesto análisis |
+| D02 manual | Implementado en alcance UI | Cambia dentro de D02 a nombre/descripción inicial, validación y mismas acciones locales; no constituye pantalla D04 ni genera perfil |
+| Disponibilidad | Explícita | Análisis y secciones futuras solo texto de indisponibilidad; no botones que simulen generar o navegar a contenido inventado |
+
+Solo una de las73 filas de features.csv pasa de no a **partial** (entrada web/manual). No se marca importación real ni ningún must completo del circuito SaaS. Borradores locales no sustituyen el futuro backend/Auth. La etapa UI solicitada está realizada; el producto completo sigue pendiente.
+
+## Adaptaciones acotadas y justificadas
+
+- D02 del diseño incluía “Analizar sitio” y avanzar a D03. La restricción actual excluye análisis/backend: el CTA operativo es “Guardar dirección”, acompañado de explicación y sin cobro. No hay carga o éxito de análisis ficticios.
+- “Comenzar manualmente” muestra dos campos iniciales dentro de D02, no Brand DNA editable ni su aprobación. La persistencia temporal explícita en esta pestaña permite una acción útil y comprobable; no se rotula como guardado en nube. JSON descargable es copia de datos aportados por el usuario, no anuncio exportado.
+- Se conserva el onboarding fuera de sidebar según README de Design. El shell incluye la variante de sidebar como base reutilizable, pero D02 usa header y menú responsive; no se crea `/workspace` ni stubs del resto de pantallas.
+- No se copian tokens al azar: CSS de aplicación se genera sin cambiar tokens JSON aprobados; colores/espaciados/tipos por roles. El favicon tipográfico y los iconos son originales. No se usa un paquete entero de iconos para ocho dibujos sencillos.
+
+## Validación
+
+Comandos ejecutados en checkout con Node24.19.0:
+
+- `npm ci --no-audit --no-fund`: instalación reproducible desde lockfile, sin ignorar conflictos de peers. ESLint9.39.5 se fija por compatibilidad declarada de plugins de Next; no se fuerza ESLint10 con peers incompatibles.
+- `npm run tokens:check`: coincide exactamente con la fuente aprobada.
+- `npm run lint`: ESLint, cero errores y cero advertencias.
+- `npm run typecheck`: TypeScript sin emisión, strict y noUncheckedIndexedAccess, sin errores.
+- `npm run build`: compilación de producción Next; página raíz prerenderizada y fuentes locales; no endpoints de negocio.
+- `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e`:14 pruebas (7 recorridos ×2 viewports) sobre servidor de producción.
+
+Cobertura E2E:1440×1000 y390×844, validación URL, guardado de sesión y refresh, recuperación/descarga JSON, manual con nombre largo, borrado local, error de almacenamiento, teclado completo, skip link, foco modal/retorno Escape, reduced-motion y reflujo320px/200% texto. Axe en estado inicial/manual guardado/menú; ausencia de errores JS/consola en inicio y ausencia de solicitudes externas al guardar URL. El servidor real arranca para las pruebas; no se usan mocks de análisis o IA.
+
+## Capturas y revisión visual
+
+Capturas reales de Chromium a ancho1440/390, de página completa (altura puede superar viewport):
+
+- [D02 escritorio](clone-screens/D02-desktop.png).
+- [D02 móvil](clone-screens/D02-mobile.png).
+- [D02 manual escritorio](clone-screens/D02-manual-desktop.png).
+- [D02 manual móvil](clone-screens/D02-manual-mobile.png).
+
+Revisión: espaciados, tipografía Inter efectiva, orden, estados y adaptación sin overflow horizontal. Se detectó y corrigió ciclo de Tab del diálogo; la etiqueta visual de navegación desktop se ajustó tras inspección. La revisión de captura completa detectó el skip link fuera de foco asomando al capturar una página desplazada; se recorta fuera de foco y permanece visible al enfocarlo. Capturas finales se regeneran tras las correcciones; estos archivos son UI implementada, no láminas de Design.
+
+## Límites y continuidad
+
+Sin autenticación, Supabase, Trigger.dev, LLM, importador, red a web del usuario, generación, pagos ni pantallas adicionales. No se declara WCAG2.2 AA global solo por axe/contraste; falta evaluación manual con tecnologías asistivas/dispositivos adicionales en etapas posteriores. Las pruebas320px/200% texto no equivalen por sí solas a toda la auditoría400% de zoom. El navegador puede bloquear sessionStorage; error conserva inputs. Reabrir una pestaña nueva no promete sincronización.
+
+PR hacia main para revisión; no merge automático. Esperar aprobación antes de continuar. Guía operativa en README raíz; no se configuraron servicios o secretos.

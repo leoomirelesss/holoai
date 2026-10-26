@@ -1,3 +1,55 @@
+# Linde — base frontend
+
+Next.js App Router, TypeScript estricto y Tailwind. Esta etapa implementa **D02: URL o entrada manual**, componentes fundamentales y shell responsive. El onboarding queda fuera de la sidebar, como especifica Design.
+
+**Sin backend, autenticación, análisis de webs o IA.** Los borradores se guardan solo en `sessionStorage` de la pestaña actual mediante acción explícita; pueden recuperarse, eliminarse y descargarse como JSON. Cerrar la pestaña puede eliminarlos. No son Brand DNA ni datos sincronizados en la nube.
+
+## Desarrollo
+
+Requiere Node.js 22 o superior (verificado con 24.19.0) y npm.
+
+```bash
+npm ci
+npm run dev
+```
+
+No hacen falta credenciales ni archivos `.env`. Fuentes Inter servidas localmente desde su paquete OFL; licencia en `public/licenses/inter-OFL.txt`. Iconos geométricos originales. Ningún recurso o petición procede de Holo.
+
+## Verificación
+
+```bash
+npm run tokens:check
+npm run lint
+npm run typecheck
+npm run build
+npm run start
+```
+
+`src/app/design-tokens.css` se genera desde el diseño aprobado con `npm run tokens`; no editarlo a mano. Arquitectura y documentos de Design no se modifican. El build comprueba que los tokens generados coinciden con la fuente.
+
+Pruebas de navegador (después de compilar):
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+Si el sistema ya dispone de Chromium, se puede evitar descargar otro navegador:
+
+```bash
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e
+```
+
+En este entorno cloud, si npm no puede escribir su caché predeterminada, anteponer `npm_config_cache=/tmp/linde-npm-cache` a los comandos de npm. No desactivar TLS ni verificaciones.
+
+Las pruebas arrancan el servidor de producción si hace falta. Cubren escritorio1440px y móvil390px, teclado, foco del menú, URL/manual, almacenamiento bloqueado, ausencia de peticiones a la empresa, axe y reflujo320px con texto ampliado. Las capturas reales están en `replica/clone-screens/`; no son wireframes ni una prueba de todas las condiciones WCAG. Ver [registro de implementación](replica/build-log.md).
+
+## Paquete de skills e investigación
+
+Se conserva a continuación la documentación del starter original. Recon, Architect y Design están aprobados; esta rama se limita a la base UI y D02. No continuar otras pantallas/backend sin autorización.
+
+---
+
 # Holo Replica — Starter para OpenAI Codex
 
 Una skill principal **holo-replica** diseñada para coordinar el proyecto de una alternativa propia a Holo AI sin copiar contenido ni código privado.

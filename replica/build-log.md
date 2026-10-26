@@ -62,3 +62,8 @@ Rama `feat/supabase-auth`, desde main con la base UI aprobada e integrada. Imple
 D01: implementación disponible, **validación positiva incompleta**.36 pruebas de navegador pasan, además de TypeScript/ESLint/build, settings reales y rechazo real de credenciales inválidas. No se creó una cuenta para fingir happy path: el usuario decidió continuar sin credenciales. El formulario privado de nueva contraseña existe pero no tiene captura autenticada; no se fabricó una sesión para obtenerla. Las diez capturas nuevas documentan acceso, registro, solicitud de recuperación y reenvío de confirmación a1440/390px.
 
 No se cambiaron fuentes de tokens, Design o Architect; se añadieron estilos D01 con sus roles existentes. La fila combinada de login en features.csv queda partial porque no incorpora Google/OTP ni tiene prueba positiva. Ninguna otra pantalla o backend se implementa. Main no se fusiona automáticamente.
+
+
+## D01 — validación con cuenta existente (2026-10-26)
+
+Superada la validación positiva de login UI, getUser remoto, `/app`, recarga, logout y denegación posterior, conservando exactamente el borrador local D02. Corregido únicamente el origen de redirección en proxy para evitar cambiar entre 127.0.0.1 y localhost; origen validado por allowlist y Host ajeno probado. 37 Playwright correctos, TypeScript, ESLint y build correctos. Sin cuentas nuevas, cambio de contraseña, correos, capturas/trazas de cuenta o servicios configurados. Evidencia y límites en backend.md y auth-live-validation.json. No se modifican Recon, Architect ni Design; la matriz histórica permanece intacta. PR #2 abierto, sin merge; esperar aprobación.

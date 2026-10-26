@@ -6,9 +6,9 @@ Fecha:2026-10-26. Proyecto indicado por el usuario:`linde-dev`, ID`wjjtqmtsysufq
 
 Las variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` están presentes; sus valores no se imprimieron ni se copiaron a documentación/Git. La URL coincide con el proyecto solicitado. Consulta real `GET /auth/v1/settings`:200, email habilitado, registro habilitado y `mailer_autoconfirm=false` (confirmación requerida). Login de un identificador del dominio reservado `.invalid` con contraseña aleatoria desechable:400 `invalid_credentials`, sin sesión. No crea cuentas ni envía correo.
 
-**No se han comprobado desde el dashboard** Site URL, Redirect URLs, plantillas, SMTP, límites/captcha o entrega al buzón: la clave publishable no es una credencial de gestión. No se han modificado estos ajustes. El usuario prefirió continuar sin credenciales de prueba; no se creó ninguna cuenta de prueba, no se solicitaron correos para una dirección inventada ni se fabricó una sesión.
+**No se han comprobado desde el dashboard** Site URL, Redirect URLs, plantillas, SMTP, límites/captcha o entrega al buzón: la clave publishable no es una credencial de gestión. No se han modificado estos ajustes. En la entrega inicial el usuario prefirió continuar sin credenciales de prueba; no se creó ninguna cuenta de prueba, no se solicitaron correos para una dirección inventada ni se fabricó una sesión.
 
-El código implementa registro, verificación, acceso, cierre y recuperación reales. La entrada correcta con cuenta confirmada, refresco de una sesión real, recepción/reuso/caducidad real de correos, cambio de contraseña completo y revocación global siguen **sin prueba end-to-end**. No se considera que un formulario renderizado o un rechazo de credenciales demuestren esos casos.
+El código implementa registro, verificación, acceso, cierre y recuperación reales. En la entrega inicial quedaron sin prueba end-to-end la entrada correcta, continuidad de sesión, correos y cambio de contraseña. La validación posterior se documenta al final; el refresco por expiración y la revocación en otro dispositivo siguen pendientes. No se considera que un formulario renderizado o un rechazo de credenciales demuestren esos casos.
 
 ## 2. Variables de aplicación
 
@@ -109,7 +109,7 @@ Cookies Auth son HttpOnly, SameSite=Lax y Secure en el origen HTTPS configurado;
 5. Pedir recuperación, abrir el enlace y cambiar contraseña. Debe volver al acceso; comprobar nueva contraseña y rechazo de la anterior, sin compartir valores.
 6. Probar enlace ya usado/caducado y comprobar error sin acceso. Verificar cierre global desde otro dispositivo según limitaciones de access-token TTL de Supabase: revocar refresh tokens no invalida necesariamente cada JWT emitido de inmediato.
 
-No se ejecutaron estos pasos con una cuenta real porque el usuario difirió las credenciales. No son bloqueos que se hayan resuelto mediante mocks. La entrega de este PR permite revisar código y configuración; **la validación positiva queda pendiente**.
+Estos pasos no se ejecutaron en la entrega inicial porque el usuario difirió las credenciales. La comprobación posterior con la cuenta existente se detalla al final. No crear nuevas cuentas, pedir recuperación ni cambiar contraseñas al ejecutar la suite de validación actual.
 
 ## 6. Fuentes oficiales consultadas
 
@@ -123,3 +123,18 @@ Lectura pública2026-10-26 de las secciones relevantes:
 - https://nodejs.org/api/cli.html — NODE_USE_ENV_PROXY disponible en Node24 y22.21; conserva TLS y usa únicamente proxy ya autorizado.
 
 No se consultaron ni copiaron endpoints privados de Holo o credenciales ajenas.
+
+
+## Validación real posterior — 2026-10-26
+
+Con las credenciales seguras existentes: login mediante la UI real, usuario confirmado verificado remotamente con `getUser()`, cookies Auth HttpOnly, acceso a `/app`, recarga con el mismo usuario, cierre mediante el botón real, ausencia de sesión y denegación posterior. El borrador D02 se comparó exactamente antes/después de recarga y logout en el mismo origen/pestaña: intacto. También se verificó la denegación inicial sin sesión.
+
+Se detectó y corrigió una redirección del proxy que normalizaba `127.0.0.1` a `localhost`. Se conserva Host únicamente si coincide exactamente con el origen canónico o su variante loopback permitida. Hay regresión para conservación de origen y rechazo de Host ajeno. Sin cambios de aplicación fuera de autenticación.
+
+Resultado final: `npm run typecheck`, `npm run lint`, `npm run build` y 37 pruebas Playwright correctos (36 regresiones desktop/móvil y un recorrido autenticado de escritorio). Axe sin infracciones en los estados comprobados. Evidencia sin datos de cuenta: [auth-live-validation.json](auth-live-validation.json).
+
+El recorrido real se ejecuta en proceso aislado, sin trazas, capturas, vídeos ni estado de sesión en disco. Sus excepciones se descartan antes de llegar al reporter; solo se guardan etapas permitidas y booleanos. Variables verificadas sin imprimir valores. No se crearon cuentas, modificaron contraseñas ni enviaron solicitudes de recuperación. Una comprobación directa adicional confirmó credenciales aceptadas y usuario confirmado y cerró su propia sesión; no sustituye al recorrido UI final.
+
+Pendientes: registro/confirmación y recuperación por correo completos (no ejecutados por instrucción), refresco tras expiración y revocación en otro dispositivo. Una recarga correcta no demuestra esos dos últimos casos. Site URL, Redirect URLs, plantillas, SMTP y límites efectivos siguen requiriendo revisión del propietario según esta guía; no se modificaron servicios.
+
+Repetición: tras compilar, ejecutar `CI=1 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e` con las variables seguras disponibles. Sin credenciales, el caso `auth-live` se omite explícitamente; nunca se considera validado. No utilizar capturas o trazas para esa cuenta.

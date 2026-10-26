@@ -77,8 +77,11 @@ test("private page denies absent and forged sessions, never an HTML-only guard",
   expect(direct.status()).toBe(307);
   const loginURL = new URL(direct.headers().location!);
   expect(loginURL.pathname).toBe("/auth/login");
-  expect(["localhost", "127.0.0.1"]).toContain(loginURL.hostname);
+  expect(loginURL.origin).toBe("http://127.0.0.1:3000");
   expect(loginURL.searchParams.get("next")).toBe("/app");
+  const forgedHost = await request.get("/app", { headers: { host: "untrusted.example.invalid" }, maxRedirects: 0 });
+  expect(forgedHost.status()).toBe(307);
+  expect(["localhost", "127.0.0.1"]).toContain(new URL(forgedHost.headers().location!).hostname);
   expect(direct.headers()["cache-control"]).toContain("no-store");
   await context.addCookies([{ name: "sb-wjjtqmtsysufqdxwknqx-auth-token", value: "base64-e30", url: "http://127.0.0.1:3000" }]);
   await page.goto("/app");

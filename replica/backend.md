@@ -39,7 +39,7 @@
 - [x] UI responsive/accesible con errores y teclado; pruebas automáticas limitadas al alcance.
 - [x] Borradores de D02 conservados; cero cambios al esquema de negocio.
 - [x] Dependencias auditadas y lockfile actualizado.
-- [ ] Registro/confirmación/login correcto con una cuenta real: pendiente; usuario decidió continuar sin credenciales.
+- [ ] Registro y confirmación por correo completos: pendientes; no se ejecutan en esta validación. El estado del login con cuenta existente figura en la sección de validación posterior.
 - [ ] Recibir correo/reset completo/refresco real/revocación en segundo dispositivo: pendiente, sin simularlos.
 - [ ] Site URL/Redirect URLs/plantillas/SMTP/límites de Auth comprobados en dashboard: requieren revisión del propietario; no accesibles con publishable key.
 - [ ] RLS, tablas, roles de workspace, account deletion empresarial, pagos, uploads y jobs: fuera del alcance, no implementados ni afirmados.
@@ -58,3 +58,18 @@
 | Rechazo real de login | [Ver](clone-screens/auth/D01-login-error-desktop.png) | [Ver](clone-screens/auth/D01-login-error-mobile.png) |
 
 Las capturas del rechazo usan una dirección del dominio reservado `.invalid`, no una cuenta de usuario ni un acceso simulado correcto. No se capturó update-password detrás de una sesión inventada.
+
+
+## Validación real posterior — 2026-10-26
+
+Con las credenciales seguras existentes: login mediante la UI real, usuario confirmado verificado remotamente con `getUser()`, cookies Auth HttpOnly, acceso a `/app`, recarga con el mismo usuario, cierre mediante el botón real, ausencia de sesión y denegación posterior. El borrador D02 se comparó exactamente antes/después de recarga y logout en el mismo origen/pestaña: intacto. También se verificó la denegación inicial sin sesión.
+
+Se detectó y corrigió una redirección del proxy que normalizaba `127.0.0.1` a `localhost`. Se conserva Host únicamente si coincide exactamente con el origen canónico o su variante loopback permitida. Hay regresión para conservación de origen y rechazo de Host ajeno. Sin cambios de aplicación fuera de autenticación.
+
+Resultado final: `npm run typecheck`, `npm run lint`, `npm run build` y 37 pruebas Playwright correctos (36 regresiones desktop/móvil y un recorrido autenticado de escritorio). Axe sin infracciones en los estados comprobados. Evidencia sin datos de cuenta: [auth-live-validation.json](auth-live-validation.json).
+
+El recorrido real se ejecuta en proceso aislado, sin trazas, capturas, vídeos ni estado de sesión en disco. Sus excepciones se descartan antes de llegar al reporter; solo se guardan etapas permitidas y booleanos. Variables verificadas sin imprimir valores. No se crearon cuentas, modificaron contraseñas ni enviaron solicitudes de recuperación. Una comprobación directa adicional confirmó credenciales aceptadas y usuario confirmado y cerró su propia sesión; no sustituye al recorrido UI final.
+
+Pendientes: registro/confirmación y recuperación por correo completos (no ejecutados por instrucción), refresco tras expiración y revocación en otro dispositivo. Una recarga correcta no demuestra esos dos últimos casos. Site URL, Redirect URLs, plantillas, SMTP y límites efectivos siguen requiriendo revisión del propietario según esta guía; no se modificaron servicios.
+
+Repetición: tras compilar, ejecutar `CI=1 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e` con las variables seguras disponibles. Sin credenciales, el caso `auth-live` se omite explícitamente; nunca se considera validado. No utilizar capturas o trazas para esa cuenta.

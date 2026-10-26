@@ -17,7 +17,11 @@ export async function proxy(request: NextRequest) {
   function loginRedirect(notice: string) {
     // Next's proxy requires an absolute Location. Only an explicitly trusted
     // canonical origin (or its local loopback equivalent) may supply that origin.
-    const origin = trustedOrigin(request.nextUrl.origin) ? request.nextUrl.origin : getSiteOrigin();
+    // Next normalizes loopback nextUrl hosts to localhost. Preserve the incoming
+    // host only after exact allowlist validation, so sessionStorage stays on-origin.
+    let origin = getSiteOrigin();
+    const incoming = `${request.nextUrl.protocol}//${request.headers.get("host") ?? ""}`;
+    if (trustedOrigin(incoming)) origin = incoming;
     const destination = new URL("/auth/login", origin);
     destination.searchParams.set("notice", notice);
     destination.searchParams.set("next", "/app");

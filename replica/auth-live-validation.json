@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "stage": "done",
+  "checks": {
+    "credentials_present": true,
+    "project_matches": true,
+    "draft_created": true,
+    "unauthenticated_access_blocked": true,
+    "ui_login_succeeded": true,
+    "supabase_user_verified": true,
+    "auth_cookies_httponly": true,
+    "private_app_accessible": true,
+    "session_survives_reload": true,
+    "same_user_after_reload": true,
+    "draft_unchanged_after_reload": true,
+    "ui_logout_succeeded": true,
+    "session_absent_after_logout": true,
+    "private_access_blocked_after_logout": true,
+    "local_draft_unchanged": true
+  }
+}

@@ -2,18 +2,26 @@
 
 Next.js App Router, TypeScript estricto y Tailwind. Esta etapa implementa **D02: URL o entrada manual**, componentes fundamentales y shell responsive. El onboarding queda fuera de la sidebar, como especifica Design.
 
-**Sin backend, autenticación, análisis de webs o IA.** Los borradores se guardan solo en `sessionStorage` de la pestaña actual mediante acción explícita; pueden recuperarse, eliminarse y descargarse como JSON. Cerrar la pestaña puede eliminarlos. No son Brand DNA ni datos sincronizados en la nube.
+**D02 sigue sin análisis web o IA.** La autenticación real se describe a continuación; los datos de marca todavía no tienen backend. Los borradores se guardan solo en `sessionStorage` de la pestaña actual mediante acción explícita; pueden recuperarse, eliminarse y descargarse como JSON. Cerrar la pestaña puede eliminarlos. No son Brand DNA ni datos sincronizados en la nube.
+
+## Autenticación real (D01)
+
+Supabase Auth está integrado con `@supabase/ssr`. Acceso/registro/recuperación/confirmación en `/auth/*`; D02 autenticado en `/app`, verificado en servidor mediante proxy y getUser. La raíz `/` conserva el borrador local público. Entrar o salir no borra sessionStorage.
+
+Configura los nombres de `.env.example` de forma segura; URL y publishable key ya se proporcionan en Codex. No service_role ni secretos elevados. `SITE_URL` es el origen de Linde (por defecto localhost:3000 en local), no el de Supabase. Revisa [guía de Redirect URLs, plantillas y entrega](replica/auth-setup.md) antes de probar el ciclo por correo. No se ha configurado SMTP u otro servicio.
+
+El usuario difirió las credenciales de prueba: están verificados rechazo real de login y acceso privado sin sesión; **login correcto, recepción de correo y reset completo todavía no se han probado con una cuenta real**. No se presenta una sesión simulada como evidencia.
 
 ## Desarrollo
 
-Requiere Node.js 22 o superior (verificado con 24.19.0) y npm.
+Requiere Node.js22.21+ de rama22 o24+ (verificado con24.19.0) y npm. El launcher usa el soporte nativo NODE_USE_ENV_PROXY con el proxy autorizado del entorno; no desactiva TLS y admite override explícito.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-No hacen falta credenciales ni archivos `.env`. Fuentes Inter servidas localmente desde su paquete OFL; licencia en `public/licenses/inter-OFL.txt`. Iconos geométricos originales. Ningún recurso o petición procede de Holo.
+D02 público no necesita credenciales. D01 y `/app` requieren las dos variables Supabase; usa los nombres de `.env.example` sin copiar valores a Git. Fuentes Inter servidas localmente desde su paquete OFL; licencia en `public/licenses/inter-OFL.txt`. Iconos geométricos originales. Ningún recurso o petición procede de Holo.
 
 ## Verificación
 
@@ -46,7 +54,7 @@ Las pruebas arrancan el servidor de producción si hace falta. Cubren escritorio
 
 ## Paquete de skills e investigación
 
-Se conserva a continuación la documentación del starter original. Recon, Architect y Design están aprobados; esta rama se limita a la base UI y D02. No continuar otras pantallas/backend sin autorización.
+Se conserva a continuación la documentación del starter original. Recon, Architect y Design están aprobados; la base UI/D02 está integrada y esta rama añade exclusivamente D01/Auth. No continuar otras pantallas/backend sin autorización.
 
 ---
 
@@ -94,3 +102,12 @@ Puedes invocarlas en Codex como `$replica-recon`, `$replica-architect` o `$repli
 - Holo AI: https://tryholo.ai/ y https://docs.tryholo.ai/
 
 Este paquete incluye nuestra skill de orquestación; **no contiene ni afirma incluir el código fuente de las 11 skills del autor**. El script las instala separadamente desde GitHub.
+
+
+### Verificación negativa contra Supabase (sin cuenta ni correos)
+
+```bash
+NODE_USE_ENV_PROXY=1 node scripts/auth-smoke.mjs
+```
+
+Lee settings y comprueba rechazo de credenciales inválidas en dominio reservado; nunca registra usuarios ni solicita emails. No sustituye prueba de login correcto. Resultados y checklist en `replica/backend.md`. Capturas D01 en `replica/clone-screens/auth/`. El caso completo con cuenta propia y correo debe ejecutarse después según la guía; no pegar contraseña o enlaces de verificación en chats/issues.

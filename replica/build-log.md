@@ -53,3 +53,17 @@ Revisión: espaciados, tipografía Inter efectiva, orden, estados y adaptación 
 Sin autenticación, Supabase, Trigger.dev, LLM, importador, red a web del usuario, generación, pagos ni pantallas adicionales. No se declara WCAG2.2 AA global solo por axe/contraste; falta evaluación manual con tecnologías asistivas/dispositivos adicionales en etapas posteriores. Las pruebas320px/200% texto no equivalen por sí solas a toda la auditoría400% de zoom. El navegador puede bloquear sessionStorage; error conserva inputs. Reabrir una pestaña nueva no promete sincronización.
 
 PR hacia main para revisión; no merge automático. Esperar aprobación antes de continuar. Guía operativa en README raíz; no se configuraron servicios o secretos.
+
+
+## Etapa D01 — Supabase Auth (2026-10-26)
+
+Rama `feat/supabase-auth`, desde main con la base UI aprobada e integrada. Implementada la integración real de email/password, registro y links de confirmación/recovery, login/logout y protección servidor de `/app` (D02 reutilizado); raíz D02 local pública conservada. Detalle, límites y evidencia en [backend.md](backend.md); ajustes que revisar en [auth-setup.md](auth-setup.md).
+
+D01: implementación disponible, **validación positiva incompleta**.36 pruebas de navegador pasan, además de TypeScript/ESLint/build, settings reales y rechazo real de credenciales inválidas. No se creó una cuenta para fingir happy path: el usuario decidió continuar sin credenciales. El formulario privado de nueva contraseña existe pero no tiene captura autenticada; no se fabricó una sesión para obtenerla. Las diez capturas nuevas documentan acceso, registro, solicitud de recuperación y reenvío de confirmación a1440/390px.
+
+No se cambiaron fuentes de tokens, Design o Architect; se añadieron estilos D01 con sus roles existentes. La fila combinada de login en features.csv queda partial porque no incorpora Google/OTP ni tiene prueba positiva. Ninguna otra pantalla o backend se implementa. Main no se fusiona automáticamente.
+
+
+## D01 — validación con cuenta existente (2026-10-26)
+
+Superada la validación positiva de login UI, getUser remoto, `/app`, recarga, logout y denegación posterior, conservando exactamente el borrador local D02. Corregido únicamente el origen de redirección en proxy para evitar cambiar entre 127.0.0.1 y localhost; origen validado por allowlist y Host ajeno probado. 37 Playwright correctos, TypeScript, ESLint y build correctos. Sin cuentas nuevas, cambio de contraseña, correos, capturas/trazas de cuenta o servicios configurados. Evidencia y límites en backend.md y auth-live-validation.json. No se modifican Recon, Architect ni Design; la matriz histórica permanece intacta. PR #2 abierto, sin merge; esperar aprobación.

@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1390" viewBox="0 0 1600 1390" role="img" aria-labelledby="title desc"><title id="title">Linde: seis módulos de producto</title><desc id="desc">Diagramas originales de onboarding, DNA, catálogo, conceptos e imagen, editor y biblioteca. Estados y versión textual en wireframes.md.</desc>
+<rect x="0" y="0" width="1600" height="1390" rx="0" fill="#F7F6F2"/>
+<text x="40" y="66" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="600" fill="#1D2722">Linde</text>
+<text x="40" y="100" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="400" fill="#536056">Sistema visual V1 · Propuesta original · Diagramas estáticos, no producto implementado</text>
+<rect x="40" y="140" width="740" height="370" rx="12" fill="#FFFFFF" stroke="#D9DDD6"/>
+<text x="62" y="180" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="#1D2722">01  Tu marca empieza aquí</text>
+<text x="62" y="206" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Onboarding por URL · revisión antes de aprobar</text>
+<text x="62" y="252" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600" fill="#1D2722">Prepara el contexto de tu marca</text>
+<text x="62" y="284" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#1D2722">Dirección de tu empresa</text>
+<rect x="62" y="296" width="440" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="74" y="320" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">https://tu-empresa.example</text>
+<rect x="62" y="354" width="172" height="40" rx="10" fill="#255D49" stroke="#255D49"/>
+<text x="74" y="378" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Analizar sitio</text>
+<text x="62" y="427" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#255D49">Completar manualmente</text>
+<text x="62" y="463" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Crearemos un borrador para que lo revises.</text>
+<rect x="820" y="140" width="740" height="370" rx="12" fill="#FFFFFF" stroke="#D9DDD6"/>
+<text x="842" y="180" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="#1D2722">02  Brand DNA revisable</text>
+<text x="842" y="206" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Identidad, voz y visuales con origen visible</text>
+<rect x="842" y="232" width="400" height="225" rx="12" fill="#F0F1EC"/>
+<text x="858" y="264" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600" fill="#1D2722">Identidad de marca</text>
+<rect x="858" y="280" width="368" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="870" y="304" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Nombre de la marca</text>
+<rect x="858" y="332" width="368" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="870" y="356" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Descripción editable</text>
+<text x="858" y="405" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Sugerido · Ver fuente</text>
+<text x="858" y="440" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Voz y audiencia</text>
+<text x="1267" y="256" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Borrador v1</text>
+<text x="1267" y="290" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Colores propios</text>
+<rect x="1267" y="308" width="48" height="48" rx="10" fill="#255D49" stroke="#727A70"/>
+<rect x="1329" y="308" width="48" height="48" rx="10" fill="#D5B286" stroke="#727A70"/>
+<rect x="1391" y="308" width="48" height="48" rx="10" fill="#F0F1EC" stroke="#727A70"/>
+<rect x="1267" y="401" width="205" height="40" rx="10" fill="#255D49" stroke="#255D49"/>
+<text x="1279" y="425" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Aprobar perfil</text>
+<rect x="40" y="540" width="740" height="370" rx="12" fill="#FFFFFF" stroke="#D9DDD6"/>
+<text x="62" y="580" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="#1D2722">03  Productos propios</text>
+<text x="62" y="606" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Catálogo revisado · fotos con estado</text>
+<rect x="62" y="632" width="400" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="74" y="656" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Buscar por nombre</text>
+<rect x="490" y="632" width="242" height="40" rx="10" fill="#255D49" stroke="#255D49"/>
+<text x="502" y="656" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Añadir producto</text>
+<rect x="62" y="696" width="210" height="166" rx="12" fill="#F0F1EC"/>
+<rect x="74" y="708" width="186" height="80" rx="8" fill="#E6EFE8"/>
+<text x="86" y="748" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#255D49">Referencia propia</text>
+<text x="76" y="818" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Producto 1</text>
+<text x="76" y="846" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Por revisar</text>
+<rect x="288" y="696" width="210" height="166" rx="12" fill="#F0F1EC"/>
+<rect x="300" y="708" width="186" height="80" rx="8" fill="#E6EFE8"/>
+<text x="312" y="748" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#255D49">Referencia propia</text>
+<text x="302" y="818" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Producto 2</text>
+<text x="302" y="846" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Activo</text>
+<rect x="514" y="696" width="210" height="166" rx="12" fill="#F0F1EC"/>
+<rect x="526" y="708" width="186" height="80" rx="8" fill="#E6EFE8"/>
+<text x="538" y="748" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#255D49">Referencia propia</text>
+<text x="528" y="818" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Producto 3</text>
+<text x="528" y="846" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Validando</text>
+<rect x="820" y="540" width="740" height="370" rx="12" fill="#FFFFFF" stroke="#D9DDD6"/>
+<text x="842" y="580" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="#1D2722">04  Una dirección creativa clara</text>
+<text x="842" y="606" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Conceptos de texto e imagen por elección explícita</text>
+<rect x="842" y="632" width="210" height="164" rx="12" fill="#F0F1EC"/>
+<text x="856" y="664" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Concepto 1</text>
+<text x="856" y="698" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#1D2722">Ángulo / titular</text>
+<text x="856" y="728" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Mensaje y CTA</text>
+<text x="856" y="768" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#255D49">Editar texto</text>
+<rect x="1068" y="632" width="210" height="164" rx="12" fill="#E6EFE8" stroke="#255D49"/>
+<text x="1082" y="664" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Concepto 2</text>
+<text x="1082" y="698" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#1D2722">Ángulo / titular</text>
+<text x="1082" y="728" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Mensaje y CTA</text>
+<text x="1082" y="768" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#255D49">Editar texto</text>
+<rect x="1294" y="632" width="210" height="164" rx="12" fill="#F0F1EC"/>
+<text x="1308" y="664" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Concepto 3</text>
+<text x="1308" y="698" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#1D2722">Ángulo / titular</text>
+<text x="1308" y="728" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Mensaje y CTA</text>
+<text x="1308" y="768" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#255D49">Editar texto</text>
+<text x="842" y="832" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">La imagen aún no se ha generado.</text>
+<rect x="1242" y="828" width="270" height="40" rx="10" fill="#255D49" stroke="#255D49"/>
+<text x="1254" y="852" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Continuar con selección</text>
+<rect x="40" y="940" width="740" height="370" rx="12" fill="#FFFFFF" stroke="#D9DDD6"/>
+<text x="62" y="980" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="#1D2722">05  Precisión para terminar</text>
+<text x="62" y="1006" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Capas y controles numéricos · guardar versión</text>
+<rect x="62" y="1032" width="125" height="232" rx="12" fill="#F0F1EC"/>
+<text x="74" y="1060" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Capas</text>
+<text x="74" y="1102" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#1D2722">Titular</text>
+<text x="74" y="1142" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#1D2722">Producto</text>
+<text x="74" y="1182" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#1D2722">Fondo</text>
+<rect x="201" y="1032" width="300" height="232" rx="12" fill="#E8EAE4"/>
+<rect x="247" y="1052" width="208" height="190" rx="4" fill="#FFFFFF"/>
+<text x="269" y="1097" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600" fill="#1D2722">Tu mensaje</text>
+<rect x="297" y="1132" width="95" height="78" rx="8" fill="#E6EFE8"/>
+<text x="307" y="1172" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#255D49">Producto</text>
+<text x="517" y="1058" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#1D2722">Propiedades</text>
+<rect x="517" y="1082" width="200" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="529" y="1106" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">X  80    Y  120</text>
+<rect x="517" y="1134" width="200" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="529" y="1158" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Tamaño  48 px</text>
+<rect x="517" y="1210" width="200" height="40" rx="10" fill="#255D49" stroke="#255D49"/>
+<text x="529" y="1234" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Guardar versión</text>
+<rect x="820" y="940" width="740" height="370" rx="12" fill="#FFFFFF" stroke="#D9DDD6"/>
+<text x="842" y="980" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="#1D2722">06  Tu trabajo, organizado</text>
+<text x="842" y="1006" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Biblioteca privada · recuperar y exportar</text>
+<text x="842" y="1048" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="400" fill="#536056">Todos    Favoritos    Archivados</text>
+<rect x="842" y="1074" width="210" height="160" rx="12" fill="#F0F1EC"/>
+<rect x="894" y="1087" width="106" height="106" rx="4" fill="#FFFFFF"/>
+<text x="903" y="1136" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Preview</text>
+<text x="854" y="1222" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#1D2722">Anuncio 1 · v2</text>
+<rect x="1068" y="1074" width="210" height="160" rx="12" fill="#F0F1EC"/>
+<rect x="1120" y="1087" width="106" height="106" rx="4" fill="#FFFFFF"/>
+<text x="1129" y="1136" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Preview</text>
+<text x="1080" y="1222" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#1D2722">Anuncio 2 · v2</text>
+<rect x="1294" y="1074" width="210" height="160" rx="12" fill="#F0F1EC"/>
+<rect x="1346" y="1087" width="106" height="106" rx="4" fill="#FFFFFF"/>
+<text x="1355" y="1136" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Preview</text>
+<text x="1306" y="1222" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#1D2722">Anuncio 3 · v2</text>
+<rect x="1292" y="1254" width="220" height="40" rx="10" fill="#255D49" stroke="#255D49"/>
+<text x="1304" y="1278" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Crear anuncio</text>
+<text x="40" y="1365" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="400" fill="#536056">Ejemplos ficticios · No hay resultados de IA, precios ni campañas simuladas. Detalle de estados en wireframes.md.</text>
+</svg>

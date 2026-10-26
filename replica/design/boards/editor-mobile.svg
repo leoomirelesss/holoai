@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="1100" viewBox="0 0 440 1100" role="img" aria-labelledby="title desc"><title id="title">Linde: editor compacto</title><desc id="desc">Diseño móvil propuesto con lienzo, lista de capas y propiedades en flujo. No oculta controles. Equivalente en editor.md.</desc>
+<rect x="0" y="0" width="440" height="1100" rx="0" fill="#F7F6F2"/>
+<rect x="0" y="0" width="440" height="116" rx="0" fill="#FFFFFF"/>
+<text x="16" y="31" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="400" fill="#255D49">← Biblioteca</text>
+<text x="16" y="66" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600" fill="#1D2722">Anuncio de ejemplo</text>
+<text x="16" y="97" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#795000">Cambios sin guardar</text>
+<rect x="266" y="12" width="158" height="40" rx="10" fill="#255D49" stroke="#255D49"/>
+<text x="278" y="36" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Guardar versión</text>
+<rect x="0" y="117" width="440" height="62" rx="0" fill="#FFFFFF"/>
+<text x="16" y="154" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="400" fill="#1D2722">Texto   Imagen   Forma</text>
+<rect x="300" y="126" width="124" height="40" rx="10" fill="#FFFFFF" stroke="#727A70"/>
+<text x="312" y="150" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#1D2722">Exportar</text>
+<rect x="16" y="196" width="408" height="346" rx="12" fill="#E8EAE4"/>
+<rect x="65" y="216" width="310" height="310" rx="0" fill="#FFFFFF"/>
+<text x="85" y="266" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="600" fill="#1D2722">Tu mensaje</text>
+<rect x="80" y="232" width="270" height="54" rx="0" fill="#FFFFFF" stroke="#2463A0"/>
+<text x="91" y="269" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="600" fill="#1D2722">Tu mensaje</text>
+<rect x="158" y="324" width="124" height="120" rx="14" fill="#E6EFE8" stroke="#727A70"/>
+<text x="174" y="389" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="400" fill="#255D49">Producto</text>
+<text x="92" y="494" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Ejemplo ficticio</text>
+<text x="46" y="579" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="400" fill="#1D2722">−   80%   +     Ajustar al ancho</text>
+<rect x="16" y="607" width="408" height="48" rx="10" fill="#FFFFFF" stroke="#727A70"/>
+<text x="38" y="637" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="400" fill="#1D2722">Capas</text>
+<rect x="213" y="611" width="205" height="40" rx="8" fill="#E6EFE8"/>
+<text x="235" y="637" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#255D49">Propiedades</text>
+<rect x="16" y="677" width="408" height="398" rx="12" fill="#FFFFFF"/>
+<text x="32" y="713" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600" fill="#1D2722">Titular seleccionado</text>
+<rect x="32" y="735" width="376" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="44" y="759" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Tu mensaje</text>
+<rect x="32" y="795" width="376" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="44" y="819" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Inter · Semibold     48 px</text>
+<rect x="32" y="855" width="180" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="44" y="879" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">X 80</text>
+<rect x="228" y="855" width="180" height="40" rx="8" fill="#FFFFFF" stroke="#727A70"/>
+<text x="240" y="879" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Y 120</text>
+<rect x="32" y="919" width="376" height="40" rx="10" fill="#FFFFFF" stroke="#727A70"/>
+<text x="44" y="943" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#1D2722">Mover ←  ↑  ↓  →   1 / 10 px</text>
+<text x="32" y="997" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="400" fill="#536056">Más propiedades debajo en flujo</text>
+<text x="32" y="1034" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="400" fill="#536056">Con teclado virtual: acciones sin superposición</text>
+</svg>

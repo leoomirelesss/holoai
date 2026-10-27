@@ -87,3 +87,10 @@ Pendientes de aprobación: aplicar migraciones y validar con stack/roles/JWT rea
 Rama `test/supabase-integration`, desde main con PR #3 integrado. Suite reproducible preparada para dos usuarios creados por Auth local, JWT reales y operaciones PostgREST/RPC, sin fixture que sustituya Auth. **No completada**: CLI 2.122.0/Docker disponibles, pero imágenes estándar fallan al extraer PostgreSQL por ENOSPC en disco de 32 GB con driver vfs; variante compacta tampoco pasó salud. 0 checks de integración, sin aplicar la migración aprobada ni crear usuarios/sesiones. Migraciones y frontend intactos; proyecto remoto sin cambios.
 
 TypeScript, ESLint, build y 34 regresiones de navegador correctos (1 worker/timeout 90 s tras timeouts previos con dos workers). Instancias locales limpiadas y caché introducida retirada selectivamente. [Evidencia, alcance, comando y todos los casos pendientes](supabase-integration.md). Hace falta repetir en un entorno local capaz de arrancar el stack oficial; no sustituir por la prueba SQL con Auth mínimo. No aplicar migraciones a linde-dev ni avanzar a otras fases.
+
+
+## Integración local real completada en Actions (2026-10-27)
+
+El bloqueo local anterior queda superado con el runner gratuito ubuntu-24.04/overlay2 y 85 GiB libres, sin secretos ni permisos de escritura del workflow. Ejecuciones [automática](https://github.com/leoomirelesss/holoai/actions/runs/40533266341) y [manual](https://github.com/leoomirelesss/holoai/actions/runs/40533406411) correctas: **82 comprobaciones** con dos usuarios de GoTrue, JWT reales, PostgREST/RPC, RLS, roles, historial/aprobación y concurrencia. Evidencia exclusivamente JSON sanitizado, checksum de migración coincidente y cleanup=true. Corregido únicamente un filtro de evidencia que rechazaba `_` en nombres de checks; migración, frontend y Auth de aplicación intactos.
+
+Detalle y limitaciones en [supabase-integration.md](supabase-integration.md): el conflicto SQLSTATE40001 devuelve HTTP500 en RPC directo; mapear a409 corresponde a la futura DAL, sin afirmar una API que aún no existe. linde-dev no se enlazó ni modificó; la aprobación del PR no ejecuta migraciones remotas.

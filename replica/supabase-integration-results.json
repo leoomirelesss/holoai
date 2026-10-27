@@ -1,10 +1,341 @@
 {
   "cli": "2.122.0",
-  "status": "failed",
-  "stage": "local-stack-start",
-  "checks": [],
-  "failureCategory": "disk-space",
-  "cleanup": true,
   "migration": "supabase/migrations/20261026000100_brand_data_foundation.sql",
-  "migrationSha256": "7c9dc238ae4070616e918d5a4ab077e2c9179f44c68a79a3f90ae6315dec262c"
+  "migrationSha256": "7c9dc238ae4070616e918d5a4ab077e2c9179f44c68a79a3f90ae6315dec262c",
+  "status": "passed",
+  "stage": "done",
+  "checks": [
+    {
+      "name": "local-auth-signup-1",
+      "passed": true
+    },
+    {
+      "name": "local-password-login-1",
+      "passed": true
+    },
+    {
+      "name": "auth-verified-session-1",
+      "passed": true
+    },
+    {
+      "name": "local-auth-signup-2",
+      "passed": true
+    },
+    {
+      "name": "local-password-login-2",
+      "passed": true
+    },
+    {
+      "name": "auth-verified-session-2",
+      "passed": true
+    },
+    {
+      "name": "two-real-local-auth-users",
+      "passed": true
+    },
+    {
+      "name": "concurrent-bootstrap-idempotent",
+      "passed": true
+    },
+    {
+      "name": "atomic-owner-and-workspace",
+      "passed": true
+    },
+    {
+      "name": "server-generated-id-and-times",
+      "passed": true
+    },
+    {
+      "name": "bootstrap-payload-conflict",
+      "passed": true
+    },
+    {
+      "name": "bootstrap-failure-injected",
+      "passed": true
+    },
+    {
+      "name": "bootstrap-failure-rolls-back-both-rows",
+      "passed": true
+    },
+    {
+      "name": "second-user-own-workspace",
+      "passed": true
+    },
+    {
+      "name": "editable-metadata-test-prepared",
+      "passed": true
+    },
+    {
+      "name": "fresh-jwt-with-forged-metadata",
+      "passed": true
+    },
+    {
+      "name": "create-brands-via-rpc",
+      "passed": true
+    },
+    {
+      "name": "brand-and-initial-draft-atomic",
+      "passed": true
+    },
+    {
+      "name": "incomplete-dna-approval-rejected",
+      "passed": true
+    },
+    {
+      "name": "save-dna-via-rpc",
+      "passed": true
+    },
+    {
+      "name": "save-updates-version-and-pointer",
+      "passed": true
+    },
+    {
+      "name": "approve-dna-via-rpc",
+      "passed": true
+    },
+    {
+      "name": "approval-attributed-to-authenticated-owner",
+      "passed": true
+    },
+    {
+      "name": "approved-edit-creates-new-draft",
+      "passed": true
+    },
+    {
+      "name": "new-draft-not-implicitly-approved",
+      "passed": true
+    },
+    {
+      "name": "approved-revision-preserved-exactly",
+      "passed": true
+    },
+    {
+      "name": "three-revisions-retained",
+      "passed": true
+    },
+    {
+      "name": "rls-a-cannot-read-foreign-workspaces",
+      "passed": true
+    },
+    {
+      "name": "rls-a-reads-own-workspaces",
+      "passed": true
+    },
+    {
+      "name": "rls-a-cannot-read-foreign-memberships",
+      "passed": true
+    },
+    {
+      "name": "rls-a-reads-own-memberships",
+      "passed": true
+    },
+    {
+      "name": "rls-a-cannot-read-foreign-brands",
+      "passed": true
+    },
+    {
+      "name": "rls-a-reads-own-brands",
+      "passed": true
+    },
+    {
+      "name": "rls-a-cannot-read-foreign-brand_revisions",
+      "passed": true
+    },
+    {
+      "name": "rls-a-reads-own-brand_revisions",
+      "passed": true
+    },
+    {
+      "name": "rls-b-cannot-read-foreign-workspaces",
+      "passed": true
+    },
+    {
+      "name": "rls-b-reads-own-workspaces",
+      "passed": true
+    },
+    {
+      "name": "rls-b-cannot-read-foreign-memberships",
+      "passed": true
+    },
+    {
+      "name": "rls-b-reads-own-memberships",
+      "passed": true
+    },
+    {
+      "name": "rls-b-cannot-read-foreign-brands",
+      "passed": true
+    },
+    {
+      "name": "rls-b-reads-own-brands",
+      "passed": true
+    },
+    {
+      "name": "rls-b-cannot-read-foreign-brand_revisions",
+      "passed": true
+    },
+    {
+      "name": "rls-b-reads-own-brand_revisions",
+      "passed": true
+    },
+    {
+      "name": "foreign-rpc-denied-create_brand",
+      "passed": true
+    },
+    {
+      "name": "foreign-rpc-denied-save_brand_profile",
+      "passed": true
+    },
+    {
+      "name": "foreign-rpc-denied-approve_brand_profile",
+      "passed": true
+    },
+    {
+      "name": "anonymous-denied-workspaces",
+      "passed": true
+    },
+    {
+      "name": "anonymous-denied-memberships",
+      "passed": true
+    },
+    {
+      "name": "anonymous-denied-brands",
+      "passed": true
+    },
+    {
+      "name": "anonymous-denied-brand_revisions",
+      "passed": true
+    },
+    {
+      "name": "missing-api-key-denied",
+      "passed": true
+    },
+    {
+      "name": "anonymous-rpc-denied-bootstrap_workspace",
+      "passed": true
+    },
+    {
+      "name": "anonymous-rpc-denied-create_brand",
+      "passed": true
+    },
+    {
+      "name": "anonymous-rpc-denied-save_brand_profile",
+      "passed": true
+    },
+    {
+      "name": "anonymous-rpc-denied-approve_brand_profile",
+      "passed": true
+    },
+    {
+      "name": "direct-insert-denied-workspaces",
+      "passed": true
+    },
+    {
+      "name": "direct-update-denied-workspaces",
+      "passed": true
+    },
+    {
+      "name": "direct-delete-denied-workspaces",
+      "passed": true
+    },
+    {
+      "name": "direct-insert-denied-memberships",
+      "passed": true
+    },
+    {
+      "name": "direct-update-denied-memberships",
+      "passed": true
+    },
+    {
+      "name": "direct-delete-denied-memberships",
+      "passed": true
+    },
+    {
+      "name": "direct-insert-denied-brands",
+      "passed": true
+    },
+    {
+      "name": "direct-update-denied-brands",
+      "passed": true
+    },
+    {
+      "name": "direct-delete-denied-brands",
+      "passed": true
+    },
+    {
+      "name": "direct-insert-denied-brand_revisions",
+      "passed": true
+    },
+    {
+      "name": "direct-update-denied-brand_revisions",
+      "passed": true
+    },
+    {
+      "name": "direct-delete-denied-brand_revisions",
+      "passed": true
+    },
+    {
+      "name": "internal-function-not-exposed",
+      "passed": true
+    },
+    {
+      "name": "internal-schema-not-exposed",
+      "passed": true
+    },
+    {
+      "name": "forged-jwt-signature-rejected",
+      "passed": true
+    },
+    {
+      "name": "explicit-member-can-read",
+      "passed": true
+    },
+    {
+      "name": "member-cannot-create-brand",
+      "passed": true
+    },
+    {
+      "name": "member-can-save-draft",
+      "passed": true
+    },
+    {
+      "name": "member-cannot-approve",
+      "passed": true
+    },
+    {
+      "name": "actual-owner-can-approve-member-draft",
+      "passed": true
+    },
+    {
+      "name": "revocation-blocks-read-with-same-jwt",
+      "passed": true
+    },
+    {
+      "name": "revocation-blocks-write-with-same-jwt",
+      "passed": true
+    },
+    {
+      "name": "concurrent-save-exactly-one-success",
+      "passed": true
+    },
+    {
+      "name": "concurrent-save-stale-write-rejected",
+      "passed": true
+    },
+    {
+      "name": "concurrent-save-no-duplicates-or-lost-update",
+      "passed": true
+    },
+    {
+      "name": "approved-history-survives-concurrency",
+      "passed": true
+    },
+    {
+      "name": "rls-and-grants-on-real-supabase",
+      "passed": true
+    }
+  ],
+  "cleanup": true,
+  "conflictHttpStatus": 500,
+  "executionUrl": "https://github.com/leoomirelesss/holoai/actions/runs/40533406411",
+  "executionSha": "4d11adf22c03ce04aefd40d87c9cca4e78090486"
 }

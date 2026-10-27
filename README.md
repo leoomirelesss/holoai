@@ -127,3 +127,5 @@ SUPABASE_CLI=/ruta/a/supabase npm run test:supabase
 ```
 
 Requiere la CLI oficial 2.122.0 y Docker. Crea un proyecto temporal sin enlace remoto, aplica migraciones con `--local` y prueba dos usuarios generados por Auth local con JWT reales. No utiliza claves ni cuentas de `linde-dev`. Falla explícitamente si el stack no arranca; no utiliza el fixture de Auth del test SQL. Resultado sin credenciales en `replica/supabase-integration-results.json`; detalles y límites en [replica/supabase-integration.md](replica/supabase-integration.md).
+
+El workflow [Supabase local integration](.github/workflows/supabase-integration.yml) ejecuta esta suite en `ubuntu-24.04` estándar, con permisos de lectura y sin secretos. Dispone de ejecución automática del PR y manual (`workflow_dispatch`). Se completaron 82 comprobaciones reales en Actions; enlaces y límites en la documentación anterior. Solo publica el JSON sanitizado.

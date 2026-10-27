@@ -4,6 +4,33 @@
 
 Validación exclusivamente local. No se enlaza ni se modifica `linde-dev`. El SQL aprobado se conserva sin cambios. No se modifican frontend, Auth de la aplicación, Recon, Architect o Design.
 
+## Estado actual: validado en GitHub Actions
+
+El bloqueo de espacio del entorno Codex quedó resuelto ejecutando el mismo stack local en el runner estándar **gratuito** `ubuntu-24.04` de este repositorio público. **82 comprobaciones reales completadas**, con limpieza confirmada y checksum de la migración igual al SQL aprobado. La migración se aplicó exclusivamente al stack local desechable; no se modificó `linde-dev`.
+
+- [Ejecución automática correcta](https://github.com/leoomirelesss/holoai/actions/runs/40533266341).
+- [Ejecución manual correcta](https://github.com/leoomirelesss/holoai/actions/runs/40533406411).
+- Artefacto de cada ejecución: `supabase-integration-sanitized`, exclusivamente `supabase-integration-results.json`.
+- [Copia íntegra del JSON de la ejecución manual](supabase-integration-results.json), con URL/SHA de ejecución y checksum del SQL.
+
+Se verificaron dos usuarios creados por Auth local, login y JWT firmados/verificados, bootstrap atómico e idempotente, marcas/drafts, aprobación/historial, aislamiento RLS en ambas direcciones, anónimos bloqueados, metadata sin autoridad, DML directo denegado, firma JWT alterada rechazada, roles/revocación y concurrencia. No se usó el fixture de Auth del test SQL anterior.
+
+El runner tenía Docker **overlay2** y aproximadamente **85 GiB libres** en ambos controles. Por ello no fue necesario retirar SDKs. El workflow solo permite limpiar una lista fija de SDKs prescindibles si baja de 30 GiB, tras verificar que es un VM GitHub-hosted Linux desechable. Nunca ejecuta Docker prune ni borra recursos compartidos; no utiliza runners grandes, self-hosted o servicios de pago.
+
+Workflow: `.github/workflows/supabase-integration.yml`. Se dispara en cambios relevantes del PR y permite `workflow_dispatch`, probado realmente contra la rama sin fusionar. Para repetir manualmente con permisos de ejecución del repositorio:
+
+```bash
+gh api --method POST repos/leoomirelesss/holoai/actions/workflows/398418627/dispatches -f ref=test/supabase-integration
+```
+
+Permisos del workflow: únicamente `contents: read`; checkout sin persistir credenciales. Acciones fijadas por SHA, Node 24.19.0 y CLI 2.122.0 con checksum del artefacto verificado. No referencia `secrets.*` ni variables/credenciales remotas. El token automático de checkout es de solo lectura; la subida usa el mecanismo de artefactos del propio run. No se añaden permisos de escritura al repositorio.
+
+El JSON histórico se descarta antes de configurar Node. Después de la prueba se reconstruye una estructura cerrada de campos permitidos, sin cuerpos/cabeceras/errores brutos ni imágenes/configuración/logs. Solo se sube cuando el sanitizador confirma que escribió un archivo seguro. Retención: 7 días. El primer run completó las 82 pruebas pero falló al validar nombres de checks con `_` (por ejemplo `brand_revisions`); se corrigió exclusivamente el filtro y las ejecuciones automática y manual posteriores terminaron verdes. No se desactivó ninguna prueba. Se comprobó además que el filtro acepta esos nombres y elimina campos extra/rechaza etiquetas no permitidas.
+
+**Límite observado:** el RPC directo rechaza una versión obsoleta con SQLSTATE `40001` y PostgREST devuelve HTTP **500**. La prueba confirma rechazo y ausencia de pérdida/duplicados; no afirma que exista un HTTP 409. La DAL/API futura deberá traducir ese conflicto a 409 conforme a Architect. No se alteró el SQL aprobado para cambiar el transporte ni se implementó una capa HTTP nueva en esta validación.
+
+Sigue pendiente cualquier aplicación/validación contra el proyecto remoto, que requiere autorización aparte. Esta ejecución valida el stack Supabase local y no reconfigura ni compara la versión/configuración de `linde-dev`.
+
 ## Ejecución reproducible
 
 Requisitos: Docker local operativo y CLI oficial **2.122.0**, instalada según la [guía oficial](https://supabase.com/docs/guides/local-development/cli/getting-started). Se verificó el digest SHA256 del artefacto Linux AMD64 contra los metadatos de su [release oficial](https://github.com/supabase/cli/releases/tag/v2.122.0). No se añadió la CLI al runtime ni dependencias npm nuevas.
@@ -73,9 +100,9 @@ Se excluyen los dos rechazos reales contra Supabase remoto y `auth-live`, que us
 - https://supabase.com/docs/reference/javascript/auth-signinwithpassword — sesión de correo/contraseña mediante Auth.
 - Ayuda de CLI 2.122.0: start, migration up --local, status y stop --no-backup --project-id.
 
-## Resultado de esta ejecución: BLOQUEADO
+## Ejecución Codex inicial (histórica): bloqueada
 
-**No se completó la validación de integración.** Docker 28.4.0 y CLI 2.122.0 están disponibles, pero el stack estándar no pudo terminar de arrancar. El motor Docker de este entorno usa `vfs` sobre un disco de 32 GB. La extracción de la imagen oficial `public.ecr.aws/supabase/postgres:17.11.0.006` falló reiteradamente por falta de espacio (`no space left on device`, categoría sanitizada `disk-space`); se observó el disco al 100 %.
+**En el entorno Codex inicial no se completó la validación de integración.** Docker 28.4.0 y CLI 2.122.0 están disponibles, pero el stack estándar no pudo terminar de arrancar. El motor Docker de este entorno usa `vfs` sobre un disco de 32 GB. La extracción de la imagen oficial `public.ecr.aws/supabase/postgres:17.11.0.006` falló reiteradamente por falta de espacio (`no space left on device`, categoría sanitizada `disk-space`); se observó el disco al 100 %.
 
 Se intentó primero el arranque estándar, se retiraron servicios auxiliares para reducir consumo y se comprobó también la variante compacta oficial. Esa variante no superó los controles de salud y tampoco se utilizó para ejecutar pruebas. El último intento, con imágenes estándar y servicios auxiliares excluidos, volvió a fallar por espacio. No se cambió el almacenamiento global de Docker, no se ignoraron los controles de salud y no se sustituyeron servicios por simulaciones.
 
@@ -91,8 +118,8 @@ Se intentó primero el arranque estándar, se retiraron servicios auxiliares par
 | Regresiones de navegador | 34/34 correctas con el comando de un worker indicado arriba. |
 | Recursos locales y proyecto remoto | Instancias/redes/volúmenes temporales eliminados; `linde-dev` intacto. |
 
-El [resultado JSON](supabase-integration-results.json) conserva `status: failed`, etapa `local-stack-start`, categoría `disk-space`, lista vacía de checks y limpieza del proyecto confirmada. El checksum identifica el SQL preparado; **no afirma que se aplicó**. La caché de imágenes introducida por estos intentos se limpió de forma selectiva para recuperar espacio (24 GB libres observados después); no se usó un prune global ni se borraron imágenes anteriores de otras tareas. La limpieza del runner se refiere a su proyecto/volúmenes/red/archivos, no a la caché compartida de imágenes de Docker.
+El resultado histórico de aquel intento conservaba `status: failed`, etapa `local-stack-start`, categoría `disk-space`, lista vacía de checks y limpieza del proyecto confirmada. El JSON enlazado actualmente procede de Actions y reemplaza ese intento con 82 checks correctos. El checksum identifica el SQL preparado; **no afirma que se aplicó**. La caché de imágenes introducida por estos intentos se limpió de forma selectiva para recuperar espacio (24 GB libres observados después); no se usó un prune global ni se borraron imágenes anteriores de otras tareas. La limpieza del runner se refiere a su proyecto/volúmenes/red/archivos, no a la caché compartida de imágenes de Docker.
 
-**Siguiente paso pendiente:** repetir `npm run test:supabase` en un Docker local con capacidad suficiente para extraer y ejecutar las imágenes oficiales, preferiblemente sin la amplificación de almacenamiento observada con vfs. No basta con que Docker responda a version/info. En ese entorno el comando debe completar start, aplicar la migración local y ejecutar realmente todos los checks antes de considerar aprobada la integración. No se ha demostrado un fallo del SQL aprobado; por tanto no se modificó ninguna migración ni código de aplicación.
+**Alternativa al bloqueo inicial, ya ejecutada con Actions:** repetir `npm run test:supabase` en un Docker local con capacidad suficiente para extraer y ejecutar las imágenes oficiales, preferiblemente sin la amplificación de almacenamiento observada con vfs. No basta con que Docker responda a version/info. En ese entorno el comando debe completar start, aplicar la migración local y ejecutar realmente todos los checks antes de considerar aprobada la integración. No se ha demostrado un fallo del SQL aprobado; por tanto no se modificó ninguna migración ni código de aplicación.
 
-Publicar/mergear estas pruebas no autoriza aplicar nada a Supabase remoto. Esperar aprobación y mantener pendiente la validación real; no avanzar a pantallas ni otras funcionalidades.
+Publicar/mergear estas pruebas no autoriza aplicar nada a Supabase remoto. Esperar aprobación antes de cualquier aplicación remota; la validación local se completó con Actions según la sección inicial. No avanzar a pantallas ni otras funcionalidades.

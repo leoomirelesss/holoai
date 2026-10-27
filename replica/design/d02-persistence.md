@@ -29,3 +29,7 @@ La tarjeta reutiliza Card, Badge, clases de resumen/borrador y tokens. Referenci
 El borrador público existente no se renombra, limpia ni migra. Borradores privados de pestaña y registro durable de operación se separan por un identificador opaco derivado en servidor de la cuenta verificada. Otro usuario no ve ese recibo en la aplicación. No se almacenan sesiones, cookies o claves en el registro. Los IDs locales nunca autorizan: la API aplica RLS en cada operación.
 
 El avance se conserva en localStorage, por lo que sigue después de recargar, cerrar sesión y abrir otra pestaña en el mismo navegador/origen. No equivale a almacenamiento cifrado ni protege frente a alguien con acceso al perfil del navegador. Borrar datos del navegador o usar otro dispositivo pierde esa referencia local; no se promete deduplicación universal. El modo URL tiene un espacio separado si ya hay un intento manual, para no sustituir su borrador pendiente.
+
+## Evidencia de revisión
+
+Playwright/Chrome real en Supabase local aislado: 34 comprobaciones D02 correctas en [Actions](https://github.com/leoomirelesss/holoai/actions/runs/40558811842), con auditorías axe de estados privados desktop1440/móvil390 sin infracciones WCAG AA detectadas. Las capturas de éxito e incertidumbre mantienen la composición aprobada, campos y CTA legibles y referencias con salto de línea. Tokens originales: 58 pares, 0 fallos AA. El texto del recibo identifica resultados parciales sin alterar el sistema visual.

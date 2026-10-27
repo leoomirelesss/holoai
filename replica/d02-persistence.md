@@ -26,7 +26,11 @@ Si la pestaña cae después de registrar creating pero antes del envío efectivo
 - El workflow de integración comprueba Chrome/Chromium preinstalado del runner y añade la suite D02, manteniendo las regresiones API/RPC. Publica JSON de estructura cerrada y exclusivamente capturas explícitas de datos sintéticos locales, sin formularios Auth, trazas o reportes crudos.
 - Regresión pública/D01: Playwright desktop/móvil, excluyendo auth-live y el caso que consulta Auth remoto. No se usan cuentas reales ni se crean marcas en linde-dev.
 
-La integración Docker en este entorno Codex sigue teniendo controlador vfs/disco32GiB; la validación completa se ejecuta en runner estándar gratuito ubuntu-24.04/overlay2 mediante Actions. Resultados finales y capturas se registrarán tras completar la ejecución. No se simulan resultados.
+La integración Docker en este entorno Codex sigue teniendo controlador vfs/disco32GiB; la validación completa se ejecuta en runner estándar gratuito ubuntu-24.04/overlay2 mediante Actions. [Ejecución real correcta](https://github.com/leoomirelesss/holoai/actions/runs/40558811842): **34 comprobaciones D02**, **82 regresiones RPC**, **93 comprobaciones API**, **10 contratos del controlador** y **31 contratos API**. TypeScript, ESLint y build de producción correctos. [JSON sanitizado](onboarding-results.json): status passed, cleanup true y checksum del SQL aprobado. Se usó Chrome real preinstalado del runner, sin instalaciones o servicios de pago.
+
+Regresión local: **34 pruebas Playwright desktop/móvil correctas**. Se repitió después de un fallo de infraestructura ENOENT al compartir test-results entre suites simultáneas; los contratos D02 ahora tienen un directorio propio. **58 pares de contraste, 0 fallos AA**; auditorías axe WCAG2.2 AA sin infracciones en los estados privados medidos. Esto no equivale a una certificación completa de accesibilidad.
+
+Capturas reales1440px y390px, generadas con datos sintéticos del stack local: formulario/almacenamiento pendiente, éxito desktop/móvil y creación incierta móvil. Revisión visual: espaciado/tipografía coherentes con tokens, botones alcanzables, referencias largas con salto de línea, una columna móvil y sin overflow. Los artefactos no contienen credenciales ni pantallas de acceso. Los ajustes posteriores de texto del recibo se vuelven a validar en la ejecución final del PR.
 
 ## Alcance conservado
 

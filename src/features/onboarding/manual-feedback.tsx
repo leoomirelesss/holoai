@@ -23,6 +23,7 @@ export function ManualFeedback({ operation, failure, busy, progress }: { operati
       <div className="saved-heading"><h2 id="manual-operation-title">Tu alta manual</h2><Badge>{busy ? "En curso" : operation.stage === "complete" ? "Guardado confirmado" : uncertain ? "Resultado incierto" : "Guardado pendiente"}</Badge></div>
       <p className="draft-value">{operation.name}</p>
       <p className="draft-description">{operation.description}</p>
+      <p className="field-hint">{operation.workspaceId ? "Espacio de trabajo confirmado." : "Espacio de trabajo pendiente de confirmar."}</p>
       {operation.brandId && <p className="field-hint">ID de marca confirmado: <span className="operation-reference">{operation.brandId}</span></p>}
       <p className="field-hint">Referencia del intento: <span className="operation-reference">{operation.attempt}</span></p>
       <p className="field-hint">Esta alta no aprueba el perfil. Revisar y aprobar Brand DNA todavía no está disponible en esta pantalla.</p>

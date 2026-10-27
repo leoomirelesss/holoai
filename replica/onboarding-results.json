@@ -1,0 +1,149 @@
+{
+  "cli": "2.122.0",
+  "migration": "supabase/migrations/20261026000100_brand_data_foundation.sql",
+  "migrationSha256": "7c9dc238ae4070616e918d5a4ab077e2c9179f44c68a79a3f90ae6315dec262c",
+  "status": "passed",
+  "stage": "done",
+  "checks": [
+    {
+      "name": "local-auth-user-0",
+      "passed": true
+    },
+    {
+      "name": "local-auth-user-1",
+      "passed": true
+    },
+    {
+      "name": "public-url-draft-only",
+      "passed": true
+    },
+    {
+      "name": "real-ui-login-owner-a",
+      "passed": true
+    },
+    {
+      "name": "private-keyboard-and-autofill-semantics",
+      "passed": true
+    },
+    {
+      "name": "private-empty-required-and-focus",
+      "passed": true
+    },
+    {
+      "name": "private-storage-failure-no-api",
+      "passed": true
+    },
+    {
+      "name": "private-desktop-empty-accessibility",
+      "passed": true
+    },
+    {
+      "name": "manual-double-submit-and-two-tabs-one-brand",
+      "passed": true
+    },
+    {
+      "name": "description-confirmed-via-real-api",
+      "passed": true
+    },
+    {
+      "name": "private-reload-restores-receipt-and-draft",
+      "passed": true
+    },
+    {
+      "name": "confirmed-retry-is-read-only",
+      "passed": true
+    },
+    {
+      "name": "same-account-second-tab-no-duplicate",
+      "passed": true
+    },
+    {
+      "name": "private-success-desktop-accessibility",
+      "passed": true
+    },
+    {
+      "name": "private-success-mobile-accessibility-reflow",
+      "passed": true
+    },
+    {
+      "name": "logout-keeps-both-drafts-and-ledger",
+      "passed": true
+    },
+    {
+      "name": "real-ui-login-owner-b",
+      "passed": true
+    },
+    {
+      "name": "stale-tab-discards-intent-after-account-change",
+      "passed": true
+    },
+    {
+      "name": "account-switch-does-not-render-other-user-data",
+      "passed": true
+    },
+    {
+      "name": "cross-user-brand-api-is-404",
+      "passed": true
+    },
+    {
+      "name": "existing-workspace-local-fixture",
+      "passed": true
+    },
+    {
+      "name": "offline-keeps-draft-and-recovery-record",
+      "passed": true
+    },
+    {
+      "name": "lost-patch-response-retains-confirmed-brand-id",
+      "passed": true
+    },
+    {
+      "name": "existing-workspace-was-not-created-again",
+      "passed": true
+    },
+    {
+      "name": "lost-patch-reload-reconciles-without-duplicate",
+      "passed": true
+    },
+    {
+      "name": "expired-session-preserves-operation",
+      "passed": true
+    },
+    {
+      "name": "real-conflict-keeps-local-description",
+      "passed": true
+    },
+    {
+      "name": "conflict-retry-never-overwrites-newer-revision",
+      "passed": true
+    },
+    {
+      "name": "lost-create-response-is-uncertain",
+      "passed": true
+    },
+    {
+      "name": "uncertain-create-survives-reload-without-retry",
+      "passed": true
+    },
+    {
+      "name": "uncertain-mobile-accessibility",
+      "passed": true
+    },
+    {
+      "name": "private-url-remains-local-and-keeps-manual-draft",
+      "passed": true
+    },
+    {
+      "name": "public-draft-and-public-behavior-unchanged",
+      "passed": true
+    },
+    {
+      "name": "no-browser-runtime-errors",
+      "passed": true
+    }
+  ],
+  "cleanup": true,
+  "scope": "manual-onboarding",
+  "executionUrl": "https://github.com/leoomirelesss/holoai/actions/runs/40558811842",
+  "executionSha": "6a75bcb4595bd333218bce0b28c5d7b45e64ad8f"
+}

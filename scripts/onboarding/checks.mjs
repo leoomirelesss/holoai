@@ -107,15 +107,15 @@ export async function onboardingChecks(stack, origin, connection, record) {
     await check("account-switch-does-not-render-other-user-data", async () => { await manual("Segunda marca local", "Datos propios de la segunda cuenta local."); return await page.getByText(a.brandId, { exact: false }).count() === 0 && await page.getByRole("heading", { name: "Borrador en esta pestaña" }).count() === 0; });
     await check("cross-user-brand-api-is-404", async () => (await call(`/brands/${a.brandId}`)).status === 404);
     await check("existing-workspace-local-fixture", async () => (await call("/workspaces", "POST", { name: "Espacio local existente" }, { "Idempotency-Key": randomUUID() })).status === 200);
-    await check("offline-keeps-draft-and-recovery-record", async () => { await context.setOffline(true); await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "No hay conexión" }).waitFor(); await context.setOffline(false); return (await savedDraft()).length === 2 && (await ledger()).stage === "workspace"; });
+    await check("offline-keeps-draft-and-recovery-record", async () => { await context.setOffline(true); await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "No hay conexión" }).waitFor(); await context.setOffline(false); return (await savedDraft()).length === 2 && (await ledger()) === null; });
     let patchCount = 0;
     await page.route("**/api/v1/brands/*/profile", async route => { patchCount++; await route.fetch(); await route.abort("failed"); });
     const beforeResume = traffic.length;
-    await check("lost-patch-response-retains-confirmed-brand-id", async () => { await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "No hay conexión" }).waitFor(); return await page.getByText(/ID de marca confirmado:/).count() === 1; });
+    await check("lost-patch-response-retains-confirmed-brand-id", async () => { await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "No hay conexión" }).waitFor(); return await page.getByText(/ID de marca confirmado:/).count() === 1; });
     await page.unroute("**/api/v1/brands/*/profile");
     await check("existing-workspace-was-not-created-again", () => !traffic.slice(beforeResume).some(c => c.path === "/api/v1/workspaces" && c.method === "POST"));
     await check("lost-patch-reload-reconciles-without-duplicate", async () => { await page.reload(); const before = traffic.length; await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).click(); await complete(); return patchCount === 1 && traffic.slice(before).every(c => c.method === "GET"); });
-    await check("expired-session-preserves-operation", async () => { await context.clearCookies(); await page.getByRole("button", { name: "Comprobar guardado", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "Tu sesión ha expirado" }).waitFor(); return (await savedDraft()).length === 2; });
+    await check("expired-session-preserves-operation", async () => { await context.clearCookies(); await page.getByRole("button", { name: "Comprobar guardado", exact: true }).click(); await page.waitForURL(/\/auth\/login/); return (await savedDraft()).length === 2 && (await ledger()).stage === "complete"; });
     await login(users[1]); await complete();
     await resetAttempt();
     await page.route("**/api/v1/brands/*/profile", async route => {

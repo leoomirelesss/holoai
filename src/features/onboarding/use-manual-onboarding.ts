@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 import { callOnboardingApi, newOperation, OnboardingFailure, parseOperation, persistManual, type FailureKind, type ManualOperation } from "./manual-operation";
 
 const changed = "linde-manual-operation";
@@ -10,7 +11,8 @@ function subscribe(callback: () => void) {
   window.addEventListener("storage", callback);
   return () => { window.removeEventListener(changed, callback); window.removeEventListener("storage", callback); };
 }
-export function useManualOnboarding(scope?: string) {
+export function useManualOnboarding(scope?: string, validationNonce?: string) {
+  const router = useRouter();
   const snapshot = useCallback(() => {
     if (!scope) return null;
     try { return localStorage.getItem(keyFor(scope)); } catch { return "unavailable"; }
@@ -24,10 +26,11 @@ export function useManualOnboarding(scope?: string) {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState("");
   const running = useRef(false);
+  const pending = useRef<{ nonce: string; name: string; description: string } | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const operation = volatile ?? stored;
-  async function start(name: string, description: string) {
-    if (!scope || running.current) return;
-    running.current = true; setBusy(true); setFailure(null);
+  const run = useCallback(async (name: string, description: string) => {
+    if (!scope) return;
     try {
       if (!navigator.locks) throw new OnboardingFailure("storage");
       await navigator.locks.request(keyFor(scope), { ifAvailable: true }, async (lock) => {
@@ -42,11 +45,30 @@ export function useManualOnboarding(scope?: string) {
           setVolatile(null);
           window.dispatchEvent(new Event(changed));
         };
-        save(op); // No request without a durable recovery record.
+        save(op);
         await persistManual(op, callOnboardingApi, save, setProgress);
       });
     } catch (error) { setFailure(error instanceof OnboardingFailure ? error.kind : "unavailable"); }
     finally { setBusy(false); setProgress(""); running.current = false; }
+  }, [scope, volatile]);
+  useEffect(() => {
+    const intent = pending.current;
+    if (!intent || validationNonce === intent.nonce) return;
+    // /app re-ran requireUser. A changed account remounts the keyed component,
+    // discarding this intent instead of submitting one account's draft as another.
+    pending.current = null;
+    if (timer.current) clearTimeout(timer.current);
+    void Promise.resolve().then(() => run(intent.name, intent.description));
+  }, [validationNonce, run]);
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  function start(name: string, description: string) {
+    if (!scope || !validationNonce || running.current) return;
+    running.current = true; setBusy(true); setFailure(null); setProgress("Verificando tu sesión…");
+    pending.current = { nonce: validationNonce, name, description };
+    timer.current = setTimeout(() => {
+      pending.current = null; running.current = false; setBusy(false); setProgress(""); setFailure("network");
+    }, 12000);
+    router.refresh(); // Read-only server identity preflight, never a business mutation.
   }
   return { operation, failure: broken ? "storage" as const : failure, busy, progress, start };
 }

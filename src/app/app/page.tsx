@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { AppShell } from "@/components/layout/app-shell";
 import { BrandStart } from "@/features/onboarding/brand-start";
 import { requireUser } from "@/lib/auth/session";
@@ -12,6 +12,6 @@ export default async function PrivateOnboarding({ searchParams }: { searchParams
   const params = await searchParams;
   return <AppShell onboarding authenticated>
     {params.notice === "logout-failed" && <div className="account-notice"><Notice tone="warning" title="No pudimos cerrar la sesión"><p>Vuelve a intentarlo. No se ha confirmado el cierre de tus sesiones.</p></Notice></div>}
-    <BrandStart key={onboardingScope} persistenceScope={onboardingScope} />
+    <BrandStart key={onboardingScope} persistenceScope={onboardingScope} validationNonce={randomUUID()} />
   </AppShell>;
 }

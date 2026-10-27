@@ -12,8 +12,8 @@ import { ManualFeedback } from "./manual-feedback";
 
 type Errors = { website?: string; name?: string; description?: string };
 
-export function BrandStart({ persistenceScope }: { persistenceScope?: string }) {
-  const manual = useManualOnboarding(persistenceScope);
+export function BrandStart({ persistenceScope, validationNonce }: { persistenceScope?: string; validationNonce?: string }) {
+  const manual = useManualOnboarding(persistenceScope, validationNonce);
   const persistent = Boolean(persistenceScope);
   const locked = Boolean(manual.operation);
   const [selectedMode, setMode] = useState<BrandDraft["mode"] | null>(null);

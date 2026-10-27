@@ -28,7 +28,7 @@ export function useManualOnboarding(scope?: string, validationNonce?: string) {
   const running = useRef(false);
   const pending = useRef<{ nonce: string; name: string; description: string } | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const operation = volatile ?? stored;
+  const operation = volatile && (!stored || stored.attempt === volatile.attempt) ? volatile : stored;
   const run = useCallback(async (name: string, description: string) => {
     if (!scope) return;
     try {
@@ -36,7 +36,10 @@ export function useManualOnboarding(scope?: string, validationNonce?: string) {
       await navigator.locks.request(keyFor(scope), { ifAvailable: true }, async (lock) => {
         if (!lock) throw new OnboardingFailure("busy");
         let op: ManualOperation | null;
-        try { op = volatile ?? parseOperation(localStorage.getItem(keyFor(scope))); }
+        try {
+          op = parseOperation(localStorage.getItem(keyFor(scope)));
+          if (volatile && (!op || op.attempt === volatile.attempt)) op = volatile;
+        }
         catch { throw new OnboardingFailure("storage"); }
         op ??= newOperation(name, description);
         const save = (value: ManualOperation) => {

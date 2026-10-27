@@ -89,9 +89,20 @@ export async function onboardingChecks(stack, origin, connection, record) {
       await screenshot("D02-persistent-desktop.png");
       return audit.violations.length === 0 && await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
     });
-    await check("manual-double-submit-one-persisted-brand", async () => {
-      await page.getByLabel("Nombre de tu marca").evaluate(el => { el.form.requestSubmit(); el.form.requestSubmit(); });
-      await complete();
+    await check("manual-double-submit-and-two-tabs-one-brand", async () => {
+      const tab = await context.newPage(); await tab.goto(`${origin}/app`);
+      await tab.getByRole("button", { name: "Comenzar manualmente", exact: true }).click();
+      await tab.getByLabel("Nombre de tu marca").fill("Marca local de validación");
+      await tab.getByLabel("¿Qué ofrece tu empresa?").fill("Una descripción propia para comprobar la persistencia local.");
+      await Promise.all([
+        page.getByLabel("Nombre de tu marca").evaluate(el => { el.form.requestSubmit(); el.form.requestSubmit(); }),
+        tab.getByLabel("Nombre de tu marca").evaluate(el => el.form.requestSubmit()),
+      ]);
+      await page.getByText("Guardado confirmado", { exact: true }).waitFor();
+      if (await page.getByRole("alert").filter({ hasText: "otra pestaña" }).count()) {
+        await page.getByRole("button", { name: "Comprobar guardado", exact: true }).click();
+      }
+      await complete(); await tab.close();
       const value = await stack.sql(`select (select count(*) from public.workspaces where owner_user_id='${users[0].id}') || ':' || (select count(*) from public.brands b join public.workspaces w on w.id=b.workspace_id where w.owner_user_id='${users[0].id}') || ':' || (select count(*) from public.brand_revisions r join public.workspaces w on w.id=r.workspace_id where w.owner_user_id='${users[0].id}');`);
       return value === "1:1:2";
     });
@@ -102,8 +113,17 @@ export async function onboardingChecks(stack, origin, connection, record) {
     await check("same-account-second-tab-no-duplicate", async () => { const tab = await context.newPage(); await tab.goto(`${origin}/app`); await tab.getByText("Marca y descripción guardadas. Se conserva el borrador local.", { exact: true }).waitFor(); await tab.close(); return Number(await stack.sql(`select count(*) from public.brands where workspace_id='${a.workspaceId}';`)) === 1; });
     await check("private-success-desktop-accessibility", async () => { const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze(); await screenshot("D02-persistent-success-desktop.png"); return audit.violations.length === 0; });
     await check("private-success-mobile-accessibility-reflow", async () => { await page.setViewportSize({ width: 390, height: 844 }); const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze(); await screenshot("D02-persistent-success-mobile.png"); return audit.violations.length === 0 && await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth); });
+    const staleTab = await context.newPage(); await staleTab.goto(`${origin}/app`);
+    await staleTab.getByText("Guardado confirmado", { exact: true }).waitFor();
     await check("logout-keeps-both-drafts-and-ledger", async () => { await page.getByRole("button", { name: "Cerrar sesión", exact: true }).click(); await page.waitForURL(/\/auth\/login/); return await page.evaluate(() => Boolean(sessionStorage.getItem("linde.brand-start.v1"))) && (await savedDraft()).length === 1 && (await ledger()).brandId === a.brandId; });
     await check("real-ui-login-owner-b", () => login(users[1]));
+    await check("stale-tab-discards-intent-after-account-change", async () => {
+      let calls = 0; staleTab.on("request", request => { if (new URL(request.url()).pathname.startsWith("/api/v1/")) calls++; });
+      await staleTab.getByRole("button", { name: "Comprobar guardado", exact: true }).click();
+      await staleTab.getByRole("button", { name: "Comenzar manualmente", exact: true }).waitFor();
+      const isolated = calls === 0 && await staleTab.getByText(a.brandId, { exact: false }).count() === 0;
+      await staleTab.close(); return isolated;
+    });
     await check("account-switch-does-not-render-other-user-data", async () => { await manual("Segunda marca local", "Datos propios de la segunda cuenta local."); return await page.getByText(a.brandId, { exact: false }).count() === 0 && await page.getByRole("heading", { name: "Borrador en esta pestaña" }).count() === 0; });
     await check("cross-user-brand-api-is-404", async () => (await call(`/brands/${a.brandId}`)).status === 404);
     await check("existing-workspace-local-fixture", async () => (await call("/workspaces", "POST", { name: "Espacio local existente" }, { "Idempotency-Key": randomUUID() })).status === 200);

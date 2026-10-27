@@ -33,20 +33,15 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Initialize fresh failure evidence
+        run: |
+          # Never upload the committed historical result if setup cannot run.
+          printf '%s\n' '{"cli":"2.122.0","status":"failed","stage":"ci-preflight","checks":[],"cleanup":true}' > replica/supabase-integration-results.json
+
       - name: Node 24
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24.19.0'
-
-      - name: Initialize fresh failure evidence
-        run: |
-          node --input-type=module <<'JS'
-          import { writeFileSync } from 'node:fs';
-          // Never upload the historical, committed ENOSPC result as a new run.
-          writeFileSync('replica/supabase-integration-results.json', JSON.stringify({
-            cli: '2.122.0', status: 'failed', stage: 'ci-preflight', checks: [], cleanup: true
-          }, null, 2) + '\n');
-          JS
 
       - name: Check Docker and free ephemeral runner space if needed
         shell: bash
@@ -91,6 +86,7 @@ jobs:
         run: npm run test:supabase
 
       - name: Prepare sanitized evidence only
+        id: evidence
         if: always()
         env:
           EXECUTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -98,7 +94,7 @@ jobs:
         run: node scripts/supabase-integration/ci-evidence.mjs
 
       - name: Upload sanitized JSON
-        if: always()
+        if: ${{ always() && steps.evidence.outputs.safe == 'true' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: supabase-integration-sanitized

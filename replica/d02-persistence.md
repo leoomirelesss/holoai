@@ -30,7 +30,7 @@ La integración Docker en este entorno Codex sigue teniendo controlador vfs/disc
 
 Regresión local: **34 pruebas Playwright desktop/móvil correctas**. Se repitió después de un fallo de infraestructura ENOENT al compartir test-results entre suites simultáneas; los contratos D02 ahora tienen un directorio propio. **58 pares de contraste, 0 fallos AA**; auditorías axe WCAG2.2 AA sin infracciones en los estados privados medidos. Esto no equivale a una certificación completa de accesibilidad.
 
-Capturas reales1440px y390px, generadas con datos sintéticos del stack local: formulario/almacenamiento pendiente, éxito desktop/móvil y creación incierta móvil. Revisión visual: espaciado/tipografía coherentes con tokens, botones alcanzables, referencias largas con salto de línea, una columna móvil y sin overflow. Los artefactos no contienen credenciales ni pantallas de acceso. Los ajustes posteriores de texto del recibo se vuelven a validar en la ejecución final del PR.
+Capturas reales1440px y390px, generadas con datos sintéticos del stack local: formulario/almacenamiento pendiente, éxito desktop/móvil y creación incierta móvil. Revisión visual: espaciado/tipografía coherentes con tokens, botones alcanzables, referencias largas con salto de línea, una columna móvil y sin overflow. Los artefactos no contienen credenciales ni pantallas de acceso. La [ejecución aprobada 40559911090](https://github.com/leoomirelesss/holoai/actions/runs/40559911090), commit `57b9dbd`, ya validó los ajustes finales del recibo. Las cuatro capturas originales están versionadas y se consultan directamente en el [índice visual D02](design/screenshots/d02/README.md), con sus estados, dimensiones y procedencia.
 
 ## Alcance conservado
 

@@ -44,4 +44,10 @@ D02 ofrece «Revisar Brand DNA» únicamente con ID confirmado y alta completa. 
 
 Anclas, labels, fieldsets/legends, controles nativos, foco visible y avisos role=status/alert. Confirmación al salir con cambios o escritura pendiente, incluyendo links, logout, recarga y navegación de historial. Cargar una versión distinta requiere confirmación; antes se ofrecen copia y descarga. No se aprueban cambios sin guardar.
 
-Los estilos usan tokens existentes; los HEX de las vistas previas son datos del perfil validados. Revisión de contraste:58 pares,0 fallos AA. Las auditorías axe y capturas reales se documentarán tras finalizar la integración local en Actions; no se declara certificación global WCAG.
+Los estilos usan tokens existentes; los HEX de las vistas previas son datos del perfil validados. Revisión de contraste:58 pares,0 fallos AA. Las auditorías axe y capturas reales están documentadas en el resultado siguiente; no se declara certificación global WCAG.
+
+## Validación y evidencia final
+
+[Actions 40590747868](https://github.com/leoomirelesss/holoai/actions/runs/40590747868), código d3d7559:48 comprobaciones D04 correctas con usuarios reales de Supabase local. Auditorías axe sin infracciones en los estados medidos; viewport1440/390 y reflow320 con texto200% sin overflow. [Índice de ocho PNG originales](screenshots/d04/README.md), con enlaces directos y dimensiones.
+
+La revisión detectó y corrigió el nombre ARIA en la paleta vacía (ahora texto de estado o grupo accesible) y nowrap en la etiqueta de revisión a200% (ahora puede ocupar varias líneas). Los cambios se limitan a D04; no se recolorean tokens ni se rediseñan D02/D01. El estado y los errores también aparecen junto a las acciones al final del formulario; las nuevas versiones siguen siendo consultas separadas y su carga exige confirmación.

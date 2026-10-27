@@ -1,0 +1,205 @@
+{
+  "cli": "2.122.0",
+  "migration": "supabase/migrations/20261026000100_brand_data_foundation.sql",
+  "migrationSha256": "7c9dc238ae4070616e918d5a4ab077e2c9179f44c68a79a3f90ae6315dec262c",
+  "status": "passed",
+  "stage": "done",
+  "checks": [
+    {
+      "name": "dna-local-auth-0",
+      "passed": true
+    },
+    {
+      "name": "dna-local-auth-1",
+      "passed": true
+    },
+    {
+      "name": "dna-real-owner-login",
+      "passed": true
+    },
+    {
+      "name": "dna-d02-real-create-and-confirmed-link",
+      "passed": true
+    },
+    {
+      "name": "dna-loading-skeleton-accessibility",
+      "passed": true
+    },
+    {
+      "name": "dna-real-revision-and-authorized-navigation",
+      "passed": true
+    },
+    {
+      "name": "dna-five-required-fields-before-approval",
+      "passed": true
+    },
+    {
+      "name": "dna-incomplete-validation-accessibility",
+      "passed": true
+    },
+    {
+      "name": "dna-no-approval-of-unsaved-local-data",
+      "passed": true
+    },
+    {
+      "name": "dna-save-with-real-etag-and-no-duplicate-submit",
+      "passed": true
+    },
+    {
+      "name": "dna-saved-desktop-axe-and-screenshot",
+      "passed": true
+    },
+    {
+      "name": "dna-saved-mobile-axe-and-screenshot",
+      "passed": true
+    },
+    {
+      "name": "dna-320px-and-enlarged-text-reflow",
+      "passed": true
+    },
+    {
+      "name": "dna-d02-historical-receipt-retains-confirmed-detail-link",
+      "passed": true
+    },
+    {
+      "name": "dna-real-approval-preserves-revision-count",
+      "passed": true
+    },
+    {
+      "name": "dna-approved-mobile-axe",
+      "passed": true
+    },
+    {
+      "name": "dna-unsaved-edits-reload-and-restore",
+      "passed": true
+    },
+    {
+      "name": "dna-leave-cancel-keeps-editor",
+      "passed": true
+    },
+    {
+      "name": "dna-edit-after-approval-retains-approved-snapshot",
+      "passed": true
+    },
+    {
+      "name": "dna-new-draft-and-approved-desktop-axe",
+      "passed": true
+    },
+    {
+      "name": "dna-real-concurrent-save-409-keeps-local-data",
+      "passed": true
+    },
+    {
+      "name": "dna-consult-current-version-does-not-merge",
+      "passed": true
+    },
+    {
+      "name": "dna-conflict-backup-download-and-copy",
+      "passed": true
+    },
+    {
+      "name": "dna-conflict-desktop-axe",
+      "passed": true
+    },
+    {
+      "name": "dna-explicit-reload-requires-confirmation",
+      "passed": true
+    },
+    {
+      "name": "dna-lost-save-response-blocks-retry",
+      "passed": true
+    },
+    {
+      "name": "dna-uncertain-write-accessibility",
+      "passed": true
+    },
+    {
+      "name": "dna-lost-save-reload-confirms-without-duplicate-revision",
+      "passed": true
+    },
+    {
+      "name": "dna-lost-approval-response-blocks-retry",
+      "passed": true
+    },
+    {
+      "name": "dna-approval-reconciles-read-without-resubmission",
+      "passed": true
+    },
+    {
+      "name": "dna-offline-preserves-edits",
+      "passed": true
+    },
+    {
+      "name": "dna-offline-error-accessibility",
+      "passed": true
+    },
+    {
+      "name": "dna-session-expiry-cannot-write",
+      "passed": true
+    },
+    {
+      "name": "dna-same-account-recovers-after-login",
+      "passed": true
+    },
+    {
+      "name": "dna-real-second-user-login",
+      "passed": true
+    },
+    {
+      "name": "dna-second-workspace-and-brand-local-only",
+      "passed": true
+    },
+    {
+      "name": "dna-cross-workspace-api-hidden",
+      "passed": true
+    },
+    {
+      "name": "dna-direct-unauthorized-route-is-404",
+      "passed": true
+    },
+    {
+      "name": "dna-denied-route-accessibility",
+      "passed": true
+    },
+    {
+      "name": "dna-own-authorized-direct-url",
+      "passed": true
+    },
+    {
+      "name": "dna-member-context-is-brand-membership-not-owned-workspace",
+      "passed": true
+    },
+    {
+      "name": "dna-other-account-local-edits-not-exposed",
+      "passed": true
+    },
+    {
+      "name": "dna-member-can-save-draft-not-approve",
+      "passed": true
+    },
+    {
+      "name": "dna-member-mobile-accessibility",
+      "passed": true
+    },
+    {
+      "name": "dna-revoked-membership-blocks-api-and-route",
+      "passed": true
+    },
+    {
+      "name": "dna-anonymous-route-is-protected",
+      "passed": true
+    },
+    {
+      "name": "dna-history-immutable-approved-snapshots",
+      "passed": true
+    },
+    {
+      "name": "dna-no-browser-runtime-errors",
+      "passed": true
+    }
+  ],
+  "cleanup": true,
+  "scope": "brand-dna",
+  "executionUrl": "https://github.com/leoomirelesss/holoai/actions/runs/40590747868",
+  "executionSha": "8064ae11a412c9283e047621938171b0f8c91eac"
+}

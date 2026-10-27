@@ -7,7 +7,7 @@ export const conflict = () => new ApiError(409, "REVISION_CONFLICT", "El recurso
 export const invalid = () => new ApiError(422, "VALIDATION_FAILED", "Revisa los campos enviados.");
 export function databaseError(error: { code?: string }): ApiError {
   if (["40001", "23505"].includes(error.code ?? "")) return conflict();
-  if (["22023", "23514", "23502", "22P02"].includes(error.code ?? "")) return invalid();
+  if (["22023", "23514", "23502", "22P02", "22021", "22P05"].includes(error.code ?? "")) return invalid();
   if (["PGRST301", "PGRST302", "PGRST303"].includes(error.code ?? "")) return new ApiError(401, "AUTH_REQUIRED", "Inicia sesión para continuar.");
   if (error.code === "42501") return notFound();
   return unavailable();
@@ -24,4 +24,9 @@ export async function requiredQuery<T>(operation: PromiseLike<{ data: T; error: 
   const data = await query(operation);
   if (data === null || data === undefined) throw unavailable();
   return data;
+}
+
+export function authenticationError(error: { name?: string; status?: number }): ApiError {
+  if (error.name === "AuthRetryableFetchError" || error.status === undefined || error.status >= 500 || error.status === 429) return unavailable();
+  return new ApiError(401, "AUTH_REQUIRED", "Inicia sesión para continuar.");
 }

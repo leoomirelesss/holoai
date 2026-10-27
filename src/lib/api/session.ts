@@ -3,7 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { authCookieOptions, getAuthConfig } from "@/lib/auth/config";
 import type { Database } from "@/lib/data/database.types";
-import { ApiError, unavailable } from "./errors";
+import { ApiError, authenticationError, unavailable } from "./errors";
 
 export async function apiSession() {
   let client;
@@ -21,10 +21,7 @@ export async function apiSession() {
   } catch { throw unavailable(); }
   let result;
   try { result = await client.auth.getUser(); } catch { throw unavailable(); }
-  if (result.error) {
-    if (result.error.name === "AuthRetryableFetchError" || result.error.status === undefined || result.error.status >= 500) throw unavailable();
-    throw new ApiError(401, "AUTH_REQUIRED", "Inicia sesión para continuar.");
-  }
+  if (result.error) throw authenticationError(result.error);
   if (!result.data.user) throw new ApiError(401, "AUTH_REQUIRED", "Inicia sesión para continuar.");
   if (!result.data.user.email_confirmed_at) throw new ApiError(403, "EMAIL_VERIFICATION_REQUIRED", "Confirma tu correo para continuar.");
   return { client, user: result.data.user };

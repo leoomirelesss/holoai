@@ -16,7 +16,12 @@ export async function workspaceAccess(session: ApiSession, id: string, owner = f
   return { workspace, membership };
 }
 export async function bootstrapWorkspace(session: ApiSession, name: string, key: string) {
-  const id = await requiredQuery(session.client.rpc("bootstrap_workspace", { p_name: name, p_bootstrap_key: key }));
+  let id: string;
+  try { id = await requiredQuery(session.client.rpc("bootstrap_workspace", { p_name: name, p_bootstrap_key: key })); }
+  catch (error) {
+    if (error instanceof ApiError && error.status === 409) throw new ApiError(409, "BOOTSTRAP_CONFLICT", "El alta entra en conflicto. Reutiliza la misma clave y datos o consulta tu workspace actual.");
+    throw error;
+  }
   if (typeof id !== "string") throw unavailable();
   const { workspace, membership } = await workspaceAccess(session, id);
   return workspaceDTO(workspace, membership);

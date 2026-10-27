@@ -4,7 +4,7 @@ const config: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   // Confirmation links are temporary credentials; never log their query strings.
-  logging: { incomingRequests: { ignore: [/^\/auth\/(?:callback|confirm)(?:[/?]|$)/] } },
+  logging: { incomingRequests: { ignore: [/^\/auth\/(?:callback|confirm)(?:[/?]|$)/, /^\/api\/v1(?:[/?]|$)/] } },
   async headers() {
     return [
       { source: "/auth/:path*", headers: [

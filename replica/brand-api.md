@@ -13,9 +13,9 @@ Respuestas propias:
 - Éxito: `{data: ..., meta: {correlation_id: ...}}`.
 - Error: `{error: {code, message, retryable}, meta: {correlation_id: ...}}`.
 - Cache-Control private/no-store, Vary Cookie, nosniff y referrer-policy no-referrer; sin redirects de login en API.
-- Correlation ID generado por servidor, nunca reflejado desde un valor arbitrario del cliente. No se registran cuerpos, cookies, tokens, claves ni errores de proveedor.
+- Correlation ID generado por servidor, nunca reflejado desde un valor arbitrario del cliente. No se registran cuerpos, cookies, tokens, claves ni errores de proveedor; también se omiten URLs privadas de API en el logger entrante de Next.
 
-Máximo HTTP:70KiB reales, incluso sin Content-Length/chunked. JSON sin compresión; tipo distinto:415; JSON inválido:400; payload excesivo:413; campos/tipos/propiedades desconocidas:422. Perfil v1 limitado por el contrato ya aprobado (64KiB de documento y límites de cada campo); SQL mantiene su validación final. No hay logo/assets/import/evidencias nuevas sin sus tablas/FKs.
+Máximo HTTP:70KiB reales, incluso sin Content-Length/chunked. JSON sin compresión; tipo distinto:415; JSON inválido:400; payload excesivo:413; campos/tipos/propiedades desconocidas:422. Perfil v1 limitado por el contrato ya aprobado (64KiB de documento y límites de cada campo); SQL mantiene su validación final. No hay logo/assets/import/evidencias nuevas sin sus tablas/FKs. Se rechazan NUL y Unicode malformado antes de llegar a PostgreSQL.
 
 401: sesión ausente/inválida. 403: correo sin confirmar, CSRF o miembro visible sin rol owner. 404: recurso ausente/no autorizado, incluidos IDs ajenos conocidos. 409: SQLSTATE40001, unicidad o versión obsoleta. 428: falta If-Match. 422: entrada inválida. 503: dependencia/configuración no disponible; detalles internos ocultos. Fallos inesperados de aplicación:500 genérico. `retryable` solo se marca para lecturas503: las mutaciones no se reintentan automáticamente ante resultados ambiguos.
 
@@ -44,6 +44,7 @@ El contador brands.revision se comprueba antes del merge y otra vez por la RPC t
 
 ## Implementación y decisiones acotadas
 
+- Validación acotada TypeScript y contratos con Playwright ya instalado; no se añaden Zod/Vitest en este tramo, frente a la selección futura de Architect. La validación transaccional SQL permanece autoritativa.
 - `src/lib/api`: contexto SSR/getUser, envelope/CSRF/lector de JSON acotado, clasificación de errores y validación pura.
 - `src/features/workspaces/server.ts` y `src/features/brands/server.ts`: DAL con módulos de dominio separados, RLS y RPC; Route Handlers finos.
 - `src/lib/data/database.types.ts`: proyección TypeScript estricta de las cuatro tablas y funciones aprobadas, sin introspección remota. Insert/Update de tablas son never en la DAL: no sustituyen los grants/RLS reales. Relationships vacías limitan esta proyección a consultas explícitas, no niegan las FKs de la base.
@@ -58,8 +59,8 @@ El propietario confirma aplicación remota con versión20261027163720; GitHub co
 
 ## Validación
 
-Local, completado antes de CI: TypeScript, ESLint, build de producción y **26 contratos Playwright sin navegador/DB**. Verifican validación, Unicode/límites, merge sin pérdida, ETags, cursores y clasificación segura de errores, incluido40001→409.
+Local, completado antes de CI: TypeScript, ESLint, build de producción y **31 contratos Playwright sin navegador/DB**. Verifican validación, Unicode/límites, merge sin pérdida, ETags, cursores y clasificación segura de errores, incluido40001→409.
 
 `npm run test:api` levanta un Supabase CLI/Docker nuevo y Next.js de producción; crea exactamente dos usuarios locales mediante Auth/SSR y usa sus cookies/JWT reales. Prueba contratos HTTP,401/403/404/409/413/415/422/428/503, idempotencia, creación/guardado/aprobación, historial, metadata, ownership/membership, revocación y concurrencia. Un cambio temporal del registro local de confirmación comprueba que se vuelve a consultar getUser; una pausa/reanudación de PostgREST comprueba503 y recuperación. Son fixtures/fallos locales de prueba, no nuevas funciones del producto ni cambios de esquema/políticas remotos.
 
-El workflow conserva la regresión RPC previa de82 checks y añade la suite API, con TypeScript/ESLint/contratos. Solo sube JSON sanitizado por suite. No usa usuarios reales, secretos de GitHub o linde-dev, ni ejecuta auth-live. **Resultado de integración API: pendiente de primera ejecución Actions al preparar este documento.** No se declara probado hasta revisar el artefacto.
+El workflow conserva la regresión RPC previa de82 checks y añade la suite API, con TypeScript/ESLint/contratos. Solo sube JSON sanitizado por suite. No usa usuarios reales, secretos de GitHub o linde-dev, ni ejecuta auth-live. **Resultado inicial de integración API: 91 comprobaciones HTTP correctas** y82 regresiones RPC en [Actions](https://github.com/leoomirelesss/holoai/actions/runs/40549066939), con cleanup confirmado.** La ampliación de validación de Unicode se verifica en la siguiente ejecución del mismo PR.

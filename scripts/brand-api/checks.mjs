@@ -104,6 +104,8 @@ export async function apiChecks(stack, origin, connection, record) {
   status("api-if-match-weak-rejected", await patch(a, 'W/"1"', { identity: {} }), 422);
   status("api-incomplete-approval", await approve(a, tag1, initial.value.data.current_revision.id), 422);
   status("api-unknown-profile-field", await patch(a, tag1, { created_by: b.id }), 422);
+  status("api-nul-profile-rejected", await patch(a, tag1, { identity: { description: "bad\0text" } }), 422);
+  status("api-malformed-unicode-rejected", await patch(a, tag1, { voice: { tone: "\uD800" } }), 422);
   const full = { identity: { description: "Description", language: "es" }, voice: { tone: "Clear", audience: "Local businesses" }, visual: { colors: ["#123456"], font_family: "Inter" } };
   const saved = await patch(a, tag1, full); status("api-save-profile", saved, 200);
   check("api-save-version-advanced", saved.value.data.revision === 2 && saved.headers.etag !== tag1);

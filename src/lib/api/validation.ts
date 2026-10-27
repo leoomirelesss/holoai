@@ -15,8 +15,9 @@ export function object(value: unknown): Record<string, unknown> {
 export function only(value: Record<string, unknown>, keys: readonly string[]) {
   if (Object.keys(value).some((key) => !keys.includes(key))) throw invalid();
 }
+function textIsValid(value: string): boolean { return value.isWellFormed() && !value.includes("\0"); }
 export function name(value: unknown): string {
-  if (typeof value !== "string" || !value.trim() || [...value.trim()].length > 160) throw invalid();
+  if (typeof value !== "string" || !textIsValid(value) || !value.trim() || [...value.trim()].length > 160) throw invalid();
   return value.trim();
 }
 export function uuid(value: unknown): string {
@@ -25,7 +26,7 @@ export function uuid(value: unknown): string {
 }
 export function website(value: unknown): string | null {
   if (value === null) return null;
-  if (typeof value !== "string" || value.length > 2048 || /\s/.test(value)) throw invalid();
+  if (typeof value !== "string" || !textIsValid(value) || value.length > 2048 || /\s/.test(value)) throw invalid();
   let url;
   try { url = new URL(value); } catch { throw invalid(); }
   if (url.protocol !== "https:" || !url.hostname || url.username || url.password) throw invalid();
@@ -63,7 +64,7 @@ export function profilePatch(value: unknown): ProfilePatch {
       if (field === "colors") {
         if (!Array.isArray(content) || content.length > 12 || content.some((color) => typeof color !== "string" || !/^#[0-9a-f]{6}$/i.test(color))) throw invalid();
       } else if (content !== null) {
-        if (typeof content !== "string" || [...content].length > allowed[field]!) throw invalid();
+        if (typeof content !== "string" || !textIsValid(content) || [...content].length > allowed[field]!) throw invalid();
         if (field === "website_url") website(content);
       }
     }

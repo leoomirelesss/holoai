@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { ApiError, databaseError, query, requiredQuery } from "../src/lib/api/errors";
+import { ApiError, authenticationError, databaseError, query, requiredQuery } from "../src/lib/api/errors";
 import { etag, expectedRevision, historyOptions, idempotency, mergeProfile, name, object, only, profilePatch, uuid, website } from "../src/lib/api/validation";
 const id = "11111111-1111-4111-8111-111111111111";
 function fails(run: () => unknown, status: number) {
@@ -17,7 +17,7 @@ test("bootstrap accepts bounded opaque keys and canonical nonempty names", () =>
   for (const key of [null, "", "x".repeat(129), "contains spaces"]) fails(() => idempotency(key), 422);
   expect(name("  Empresa  ")).toBe("Empresa");
   expect(name("😀".repeat(160))).toHaveLength(320);
-  for (const value of [null, " ", "x".repeat(161)]) fails(() => name(value), 422);
+  for (const value of [null, " ", "x".repeat(161), "nul\0name", "\uD800"]) fails(() => name(value), 422);
 });
 test("UUID and HTTPS validation does not accept context or credentials", () => {
   expect(uuid(id.toUpperCase())).toBe(id);
@@ -41,6 +41,7 @@ for (const [label, value] of [
   ["description", { identity: { description: "x".repeat(8001) } }],
   ["audience type", { voice: { audience: 42 } }],
   ["competitor", { competitors: [{ name: "" }] }],
+  ["nul", { identity: { description: "bad\0text" } }], ["surrogate", { voice: { tone: "\uD800" } }],
   ["prototype", JSON.parse('{"identity":{"__proto__":{}}}') as unknown],
 ] as const) test(`profile rejects ${label}`, () => fails(() => profilePatch(value), 422));
 test("history is bounded, opaque and rejects unexpected tenant selection", () => {
@@ -49,7 +50,7 @@ test("history is bounded, opaque and rejects unexpected tenant selection", () =>
   expect(historyOptions(new URL(`http://localhost/?history=1&cursor=${cursor}`)).before).toBe(3);
   for (const query of ["workspace_id=x", "limit=1", "history=1&limit=51", "history=1&limit=1&limit=2", "history=1&cursor=bad", "history=yes"]) fails(() => historyOptions(new URL(`http://localhost/?${query}`)), 422);
 });
-for (const [code, status] of [["40001", 409], ["23505", 409], ["22023", 422], ["23514", 422], ["42501", 404], ["PGRST301", 401], ["PGRST202", 503], ["08006", 503], ["unrecognized", 503]] as const) {
+for (const [code, status] of [["40001", 409], ["23505", 409], ["22023", 422], ["22021", 422], ["22P05", 422], ["23514", 422], ["42501", 404], ["PGRST301", 401], ["PGRST202", 503], ["08006", 503], ["unrecognized", 503]] as const) {
   test(`safe database translation ${code} to ${status}`, () => {
     const error = databaseError({ code }); expect(error.status).toBe(status);
     expect(error.message).not.toContain(code);
@@ -59,4 +60,10 @@ test("dependency failure becomes 503 and nullable resources remain distinguishab
   await expect(query(Promise.reject(new Error("private provider detail")))).rejects.toMatchObject({ status: 503 });
   expect(await query(Promise.resolve({ data: null, error: null }))).toBeNull();
   await expect(requiredQuery(Promise.resolve({ data: null, error: null }))).rejects.toMatchObject({ status: 503 });
+});
+
+test("Auth unavailability and rate limiting are not misreported as missing session", () => {
+  for (const status of [429, 500, 503]) expect(authenticationError({ status }).status).toBe(503);
+  expect(authenticationError({ name: "AuthRetryableFetchError", status: 0 }).status).toBe(503);
+  for (const status of [400, 401, 403]) expect(authenticationError({ status }).status).toBe(401);
 });

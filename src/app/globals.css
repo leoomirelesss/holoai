@@ -172,6 +172,7 @@
 @layer components {
   .nav-context { @apply text-small text-text-muted rounded-sm; display: flex; align-items: center; justify-content: space-between; min-height: var(--linde-control-touch-target); padding: var(--linde-space-12); text-decoration: none; }
   .dna-page { width: 100%; }
+  .dna-page .badge { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
   .dna-heading { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: var(--linde-space-16); }
   .dna-section-nav { display: flex; flex-wrap: wrap; gap: var(--linde-space-8); margin-block: var(--linde-space-24); }
   .dna-section-nav a { @apply text-small text-accent rounded-sm; padding: var(--linde-space-12); border: var(--linde-control-input-border) solid var(--linde-color-border-input); }

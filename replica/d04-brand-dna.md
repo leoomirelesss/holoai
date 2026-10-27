@@ -29,7 +29,7 @@ En409 se conserva el journal hasta consultar. La nueva versión se muestra separ
 
 ## Integración con D02
 
-Solo se añade el enlace de revisión al recibo de alta completa con ID confirmado. El controlador idempotente de D02 y su barrera de creación incierta no cambian. D02 público sigue local; D03, productos, extracción, generación y pagos no se habilitan. Auth permanece intacto, incluida su allowlist cerrada de retorno a /app; tras reautenticarse se puede volver a abrir el detalle autorizado desde el enlace de D02 o su URL.
+Solo se añade el enlace de revisión al recibo de alta completa con ID confirmado. El controlador idempotente de D02 y su barrera de creación incierta no cambian. El recibo de alta es histórico: si D04 cambia el perfil, la comprobación del contenido inicial puede detectar conflicto, pero conserva el enlace al ID ya confirmado sin reenviar una creación ni restaurar los campos antiguos. D02 público sigue local; D03, productos, extracción, generación y pagos no se habilitan. Auth permanece intacto, incluida su allowlist cerrada de retorno a /app; tras reautenticarse se puede volver a abrir el detalle autorizado desde el enlace de D02 o su URL.
 
 ## Comprobaciones
 
@@ -40,3 +40,5 @@ Solo se añade el enlace de revisión al recibo de alta completa con ID confirma
 - Actions mantiene las regresiones RPC/RLS, API y D02 privado antes de D04. Runner estándar gratuito, CLI2.122.0 y solo endpoints loopback del stack aislado. Artefactos JSON de esquema cerrado y capturas explícitas de datos sintéticos, sin formularios Auth, trazas o logs crudos.
 
 Primera integración real correcta: [Actions 40584300887](https://github.com/leoomirelesss/holoai/actions/runs/40584300887), 41 comprobaciones D04, 34 D02, 93 API y 82 RPC/RLS; contratos 12 D04,10 D02 y31 API correctos. Limpieza confirmada. Las comprobaciones adicionales de skeleton, errores y ruta404 se validan en la siguiente ejecución. No se usa linde-dev remoto para probar escrituras, ni se aplica o repara su historial de migraciones.
+
+En la ejecución40585736453 falló la regresión de conflicto D02 antes de llegar a D04. Se detectó una espera de UI de15s inferior al presupuesto de20s por request más el preflight/varias operaciones. Se ajustó la espera de pruebas a60s y se agregó una aserción HTTP200 de la escritura concurrente inyectada; todas las aserciones de conflicto y conservación permanecen activas. Los timeouts de producción no cambian. La siguiente ejecución verificará el escenario y la ampliación de estados D04.

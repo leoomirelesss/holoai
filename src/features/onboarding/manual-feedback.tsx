@@ -17,7 +17,7 @@ export function ManualFeedback({ operation, failure, busy, progress }: { operati
   const uncertain = operation?.stage === "creating";
   const message = failure ? messages[failure] : uncertain && !busy ? messages.uncertain : null;
   return <>
-    <p className="field-hint" role="status" aria-live="polite">{busy ? progress : operation?.stage === "complete" && !failure ? "Marca y descripción guardadas. Se conserva el borrador local." : operation?.brandId ? "Marca creada. La descripción todavía necesita confirmación de guardado." : ""}</p>
+    <p className="field-hint" role="status" aria-live="polite">{busy ? progress : operation?.stage === "complete" ? (failure ? "El alta inicial está confirmada; el perfil puede haber cambiado después." : "Marca y descripción guardadas. Se conserva el borrador local.") : operation?.brandId ? "Marca creada. La descripción todavía necesita confirmación de guardado." : ""}</p>
     {message && <div className="field-error" role="alert"><p>{message}</p>{failure === "session" && <Link href="/auth/login?next=%2Fapp">Volver a iniciar sesión</Link>}</div>}
     {operation && <Card className="manual-receipt" aria-labelledby="manual-operation-title">
       <div className="saved-heading"><h2 id="manual-operation-title">Tu alta manual</h2><Badge>{busy ? "En curso" : operation.stage === "complete" ? "Guardado confirmado" : uncertain ? "Resultado incierto" : "Guardado pendiente"}</Badge></div>
@@ -27,7 +27,7 @@ export function ManualFeedback({ operation, failure, busy, progress }: { operati
       {operation.brandId && <p className="field-hint">ID de marca confirmado: <span className="operation-reference">{operation.brandId}</span></p>}
       <p className="field-hint">Referencia del intento: <span className="operation-reference">{operation.attempt}</span></p>
       <p className="field-hint">Esta alta no aprueba el perfil. Su revisión y aprobación se realizan por separado.</p>
-      {operation.stage === "complete" && operation.brandId && !failure && !busy && <div className="draft-actions"><Link className="button button--secondary" href={`/app/brands/${operation.brandId}/dna`}>Revisar Brand DNA</Link></div>}
+      {operation.stage === "complete" && operation.brandId && failure !== "session" && failure !== "permission" && !busy && <div className="draft-actions"><Link className="button button--secondary" href={`/app/brands/${operation.brandId}/dna`}>Revisar Brand DNA</Link></div>}
     </Card>}
   </>;
 }

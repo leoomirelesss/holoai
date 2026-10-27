@@ -22,7 +22,8 @@ export async function onboardingChecks(stack, origin, connection, record) {
   const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } : {}) });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, serviceWorkers: "block" });
   const page = await context.newPage();
-  page.setDefaultTimeout(15000);
+  // The user flow chains requests with a 20s per-request budget and SSR preflight.
+  page.setDefaultTimeout(60000);
   const failures = [];
   page.on("pageerror", () => failures.push(true));
   const traffic = [];
@@ -143,11 +144,15 @@ export async function onboardingChecks(stack, origin, connection, record) {
     await check("expired-session-preserves-operation", async () => { await context.clearCookies(); await page.getByRole("button", { name: "Comprobar guardado", exact: true }).click(); await page.waitForURL(/\/auth\/login/); return (await savedDraft()).length === 2 && (await ledger()).stage === "complete"; });
     await login(users[1]); await complete();
     await resetAttempt();
+    const concurrentWrite = Promise.withResolvers();
     await page.route("**/api/v1/brands/*/profile", async route => {
       const body = route.request().postDataJSON(); body.profile_document.identity.description = "Cambio concurrente de la misma cuenta local.";
-      await route.fetch({ postData: JSON.stringify(body) }); await route.continue();
+      let status = 0;
+      try { status = (await route.fetch({ postData: JSON.stringify(body), timeout: 15000 })).status(); }
+      finally { concurrentWrite.resolve(status); }
+      await route.continue();
     });
-    await check("real-conflict-keeps-local-description", async () => { await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "han cambiado" }).waitFor(); return await page.getByLabel("¿Qué ofrece tu empresa?").inputValue() === "Una descripción propia para comprobar la persistencia local."; });
+    await check("real-conflict-keeps-local-description", async () => { await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); let timer; const injectedStatus = await Promise.race([concurrentWrite.promise, new Promise(resolve => { timer = setTimeout(() => resolve(0), 30000); })]); clearTimeout(timer); record("conflict-fixture-write-http200", injectedStatus === 200, injectedStatus || undefined); await page.getByRole("alert").filter({ hasText: "han cambiado" }).waitFor(); return await page.getByLabel("¿Qué ofrece tu empresa?").inputValue() === "Una descripción propia para comprobar la persistencia local."; });
     await page.unroute("**/api/v1/brands/*/profile");
     await check("conflict-retry-never-overwrites-newer-revision", async () => { const before = traffic.length; await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "han cambiado" }).waitFor(); return traffic.slice(before).every(c => c.method === "GET"); });
     await resetAttempt();

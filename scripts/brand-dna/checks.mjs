@@ -15,7 +15,7 @@ export async function dnaChecks(stack, origin, connection, record) {
   }
   const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } : {}) });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, serviceWorkers: "block", permissions: ["clipboard-read", "clipboard-write"] });
-  const page = await context.newPage(); page.setDefaultTimeout(20000);
+  const page = await context.newPage(); page.setDefaultTimeout(60000);
   let dismiss = false; page.on("dialog", async d => { try { if (dismiss) await d.dismiss(); else await d.accept(); } catch { /* closed */ } });
   const runtimeErrors = []; page.on("pageerror", () => runtimeErrors.push(true));
   const calls = []; page.on("request", req => { const u = new URL(req.url()); if (u.pathname.startsWith("/api/v1/")) calls.push({ path: u.pathname, method: req.method(), etag: req.headers()["if-match"] }); });
@@ -68,6 +68,14 @@ export async function dnaChecks(stack, origin, connection, record) {
     });
     await check("dna-saved-desktop-axe-and-screenshot", async () => { const ok = await audit(); await screenshot("D04-draft-desktop.png"); return ok; });
     await check("dna-saved-mobile-axe-and-screenshot", async () => { await page.setViewportSize({ width: 390, height: 844 }); const ok = await audit(); await screenshot("D04-draft-mobile.png"); return ok; });
+    await check("dna-d02-historical-receipt-retains-confirmed-detail-link", async () => {
+      await page.getByRole("link", { name: "Volver a configurar marca", exact: true }).click();
+      await page.getByRole("button", { name: "Comprobar guardado", exact: true }).click();
+      await page.getByRole("alert").filter({ hasText: "han cambiado" }).waitFor();
+      const link = page.getByRole("link", { name: "Revisar Brand DNA", exact: true });
+      const known = await link.getAttribute("href") === url;
+      await link.click(); await page.getByLabel("Nombre del perfil de marca").waitFor(); return known;
+    });
     await check("dna-real-approval-preserves-revision-count", async () => { await page.getByRole("button", { name: "Aprobar perfil", exact: true }).click(); await page.getByRole("status").filter({ hasText: "Revisión 3 aprobada." }).waitFor(); const r = await call(`/brands/${id}?history=1`); return r.data.current_revision.approval_status === "approved" && r.data.history.items.length === 3 && await page.getByRole("button", { name: "Aprobar perfil", exact: true }).isDisabled(); });
     await check("dna-approved-mobile-axe", async () => { const ok = await audit(); await screenshot("D04-approved-mobile.png"); return ok; });
     await check("dna-unsaved-edits-reload-and-restore", async () => { await page.getByLabel("Tono de comunicación").fill("Una nueva voz editorial propia."); await page.reload(); await page.getByLabel("Tono de comunicación").waitFor(); return await page.getByLabel("Tono de comunicación").inputValue() === "Una nueva voz editorial propia." && await page.getByText("Tienes cambios locales sin guardar.", { exact: true }).count() === 1; });

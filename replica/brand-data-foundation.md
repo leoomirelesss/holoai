@@ -2,7 +2,9 @@
 
 2026-10-26 · rama `feat/brand-data-foundation`, desde `main` (`b716e73`, PR #2 integrado).
 
-**Preparado para revisión; NO aplicado a `linde-dev` (`wjjtqmtsysufqdxwknqx`).** No se conectó el runner SQL al proyecto, no se ejecutó `supabase link`, `db push`, `db reset --linked` ni SQL remoto. No cambian frontend, Auth, Recon, Architect o Design. No se implementan pantallas D03/D04, endpoints HTTP, importación, productos, IA, jobs, Storage ni pagos.
+**Estado de la entrega original: preparado para revisión; entonces NO aplicado a `linde-dev` (`wjjtqmtsysufqdxwknqx`).** No se conectó el runner SQL al proyecto, no se ejecutó `supabase link`, `db push`, `db reset --linked` ni SQL remoto. No cambian frontend, Auth, Recon, Architect o Design. No se implementan pantallas D03/D04, endpoints HTTP, importación, productos, IA, jobs, Storage ni pagos.
+
+**Actualización comunicada por el propietario (2026-10-27):** aplicado y verificado en remoto con versión `20261027163720`, diferente del archivo `20261026000100`. No se ejecutan cambios remotos en la fase API. Ver [historial pendiente de reconciliación](migration-history.md).
 
 ## 1. Entrega y correspondencia con Architect
 

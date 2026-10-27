@@ -1,0 +1,386 @@
+{
+  "cli": "2.122.0",
+  "migration": "supabase/migrations/20261026000100_brand_data_foundation.sql",
+  "migrationSha256": "7c9dc238ae4070616e918d5a4ab077e2c9179f44c68a79a3f90ae6315dec262c",
+  "status": "passed",
+  "stage": "done",
+  "checks": [
+    {
+      "name": "api-local-auth-created-0",
+      "passed": true
+    },
+    {
+      "name": "api-local-ssr-session-0",
+      "passed": true
+    },
+    {
+      "name": "api-local-auth-created-1",
+      "passed": true
+    },
+    {
+      "name": "api-local-ssr-session-1",
+      "passed": true
+    },
+    {
+      "name": "api-unauthenticated-json",
+      "passed": true
+    },
+    {
+      "name": "api-invalid-session-json",
+      "passed": true
+    },
+    {
+      "name": "api-empty-current",
+      "passed": true
+    },
+    {
+      "name": "api-no-workspace-is-null",
+      "passed": true
+    },
+    {
+      "name": "api-missing-origin",
+      "passed": true
+    },
+    {
+      "name": "api-cross-origin",
+      "passed": true
+    },
+    {
+      "name": "api-opaque-origin",
+      "passed": true
+    },
+    {
+      "name": "api-cross-site-fetch",
+      "passed": true
+    },
+    {
+      "name": "api-idempotency-required",
+      "passed": true
+    },
+    {
+      "name": "api-invalid-json",
+      "passed": true
+    },
+    {
+      "name": "api-content-type",
+      "passed": true
+    },
+    {
+      "name": "api-array-body",
+      "passed": true
+    },
+    {
+      "name": "api-unknown-privileged-field",
+      "passed": true
+    },
+    {
+      "name": "api-bounded-chunked-payload",
+      "passed": true
+    },
+    {
+      "name": "api-bootstrap-0",
+      "passed": true
+    },
+    {
+      "name": "api-bootstrap-1",
+      "passed": true
+    },
+    {
+      "name": "api-bootstrap-idempotent",
+      "passed": true
+    },
+    {
+      "name": "api-bootstrap-retry",
+      "passed": true
+    },
+    {
+      "name": "api-bootstrap-retry-same-id",
+      "passed": true
+    },
+    {
+      "name": "api-bootstrap-conflicting-payload",
+      "passed": true
+    },
+    {
+      "name": "api-bootstrap-second-user",
+      "passed": true
+    },
+    {
+      "name": "api-two-isolated-workspaces",
+      "passed": true
+    },
+    {
+      "name": "api-current-authorized",
+      "passed": true
+    },
+    {
+      "name": "api-current-is-own",
+      "passed": true
+    },
+    {
+      "name": "api-workspace-dto-minimal",
+      "passed": true
+    },
+    {
+      "name": "api-client-workspace-selection-rejected",
+      "passed": true
+    },
+    {
+      "name": "api-metadata-escalation-prepared",
+      "passed": true
+    },
+    {
+      "name": "api-fresh-metadata-session",
+      "passed": true
+    },
+    {
+      "name": "api-current-after-forged-metadata",
+      "passed": true
+    },
+    {
+      "name": "api-metadata-not-authority",
+      "passed": true
+    },
+    {
+      "name": "api-create-brand",
+      "passed": true
+    },
+    {
+      "name": "api-create-brand-b",
+      "passed": true
+    },
+    {
+      "name": "api-brand-identities-distinct",
+      "passed": true
+    },
+    {
+      "name": "api-real-initial-draft",
+      "passed": true
+    },
+    {
+      "name": "api-relative-resource-location",
+      "passed": true
+    },
+    {
+      "name": "api-no-cross-tenant-create",
+      "passed": true
+    },
+    {
+      "name": "api-invalid-website",
+      "passed": true
+    },
+    {
+      "name": "api-get-brand",
+      "passed": true
+    },
+    {
+      "name": "api-version-etag",
+      "passed": true
+    },
+    {
+      "name": "api-no-cross-tenant-read",
+      "passed": true
+    },
+    {
+      "name": "api-unknown-brand",
+      "passed": true
+    },
+    {
+      "name": "api-no-resource-existence-disclosure",
+      "passed": true
+    },
+    {
+      "name": "api-if-match-required",
+      "passed": true
+    },
+    {
+      "name": "api-if-match-weak-rejected",
+      "passed": true
+    },
+    {
+      "name": "api-incomplete-approval",
+      "passed": true
+    },
+    {
+      "name": "api-unknown-profile-field",
+      "passed": true
+    },
+    {
+      "name": "api-nul-profile-rejected",
+      "passed": true
+    },
+    {
+      "name": "api-malformed-unicode-rejected",
+      "passed": true
+    },
+    {
+      "name": "api-save-profile",
+      "passed": true
+    },
+    {
+      "name": "api-save-version-advanced",
+      "passed": true
+    },
+    {
+      "name": "api-stale-save-conflict-409",
+      "passed": true
+    },
+    {
+      "name": "api-get-saved",
+      "passed": true
+    },
+    {
+      "name": "api-patch-retains-unmodified-fields",
+      "passed": true
+    },
+    {
+      "name": "api-approve",
+      "passed": true
+    },
+    {
+      "name": "api-approve-counter",
+      "passed": true
+    },
+    {
+      "name": "api-read-approved",
+      "passed": true
+    },
+    {
+      "name": "api-server-approval-time",
+      "passed": true
+    },
+    {
+      "name": "api-edit-approved-creates-draft",
+      "passed": true
+    },
+    {
+      "name": "api-history-page",
+      "passed": true
+    },
+    {
+      "name": "api-current-draft-and-approved-history",
+      "passed": true
+    },
+    {
+      "name": "api-history-bounded-with-cursor",
+      "passed": true
+    },
+    {
+      "name": "api-history-next-page",
+      "passed": true
+    },
+    {
+      "name": "api-history-no-duplicates",
+      "passed": true
+    },
+    {
+      "name": "api-selected-history",
+      "passed": true
+    },
+    {
+      "name": "api-selected-history-immutable",
+      "passed": true
+    },
+    {
+      "name": "api-foreign-revision-hidden",
+      "passed": true
+    },
+    {
+      "name": "api-history-foreign-user-hidden",
+      "passed": true
+    },
+    {
+      "name": "api-profile-foreign-user-hidden",
+      "passed": true
+    },
+    {
+      "name": "api-approval-foreign-user-hidden",
+      "passed": true
+    },
+    {
+      "name": "api-second-brand-for-revision-check",
+      "passed": true
+    },
+    {
+      "name": "api-revision-must-belong-to-brand",
+      "passed": true
+    },
+    {
+      "name": "api-concurrent-one-success-one-409",
+      "passed": true
+    },
+    {
+      "name": "api-after-concurrent-save",
+      "passed": true
+    },
+    {
+      "name": "api-no-lost-update-or-duplicate-revision",
+      "passed": true
+    },
+    {
+      "name": "api-approved-snapshot-survives-concurrency",
+      "passed": true
+    },
+    {
+      "name": "api-explicit-member-reads",
+      "passed": true
+    },
+    {
+      "name": "api-member-cannot-create-brand",
+      "passed": true
+    },
+    {
+      "name": "api-member-can-save",
+      "passed": true
+    },
+    {
+      "name": "api-member-read-latest",
+      "passed": true
+    },
+    {
+      "name": "api-member-cannot-approve",
+      "passed": true
+    },
+    {
+      "name": "api-revoked-same-jwt-read",
+      "passed": true
+    },
+    {
+      "name": "api-revoked-same-jwt-write",
+      "passed": true
+    },
+    {
+      "name": "api-session-rls-denies-foreign-direct-read",
+      "passed": true
+    },
+    {
+      "name": "api-session-no-direct-table-write",
+      "passed": true
+    },
+    {
+      "name": "api-user-reverified-not-stale-claims",
+      "passed": true
+    },
+    {
+      "name": "api-dependency-outage-503",
+      "passed": true
+    },
+    {
+      "name": "api-no-provider-error-leak",
+      "passed": true
+    },
+    {
+      "name": "api-recovery-after-outage",
+      "passed": true
+    },
+    {
+      "name": "api-exactly-two-local-auth-users",
+      "passed": true
+    }
+  ],
+  "cleanup": true,
+  "scope": "brand-api",
+  "conflictHttpStatus": 409,
+  "executionUrl": "https://github.com/leoomirelesss/holoai/actions/runs/40551737103",
+  "executionSha": "3752097f0b362d53d8b414c9f2aacce81d04602f"
+}

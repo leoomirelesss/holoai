@@ -26,7 +26,8 @@ export function ManualFeedback({ operation, failure, busy, progress }: { operati
       <p className="field-hint">{operation.workspaceId ? "Espacio de trabajo confirmado." : "Espacio de trabajo pendiente de confirmar."}</p>
       {operation.brandId && <p className="field-hint">ID de marca confirmado: <span className="operation-reference">{operation.brandId}</span></p>}
       <p className="field-hint">Referencia del intento: <span className="operation-reference">{operation.attempt}</span></p>
-      <p className="field-hint">Esta alta no aprueba el perfil. Revisar y aprobar Brand DNA todavía no está disponible en esta pantalla.</p>
+      <p className="field-hint">Esta alta no aprueba el perfil. Su revisión y aprobación se realizan por separado.</p>
+      {operation.stage === "complete" && operation.brandId && !failure && !busy && <div className="draft-actions"><Link className="button button--secondary" href={`/app/brands/${operation.brandId}/dna`}>Revisar Brand DNA</Link></div>}
     </Card>}
   </>;
 }

@@ -170,6 +170,7 @@
 }
 
 @layer components {
+  .nav-context { @apply text-small text-text-muted rounded-sm; display: flex; align-items: center; justify-content: space-between; min-height: var(--linde-control-touch-target); padding: var(--linde-space-12); text-decoration: none; }
   .dna-page { width: 100%; }
   .dna-heading { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: var(--linde-space-16); }
   .dna-section-nav { display: flex; flex-wrap: wrap; gap: var(--linde-space-8); margin-block: var(--linde-space-24); }
@@ -200,6 +201,7 @@
   .dna-section details[open] > .dna-summary-content { margin-top: var(--linde-space-16); }
   .dna-notice { margin-block: var(--linde-space-16); display: grid; }
   .dna-notice a { text-decoration: underline; }
+  .dna-inline-link { @apply text-small text-accent; text-decoration: underline; min-height: var(--linde-control-touch-target); display: inline-flex; align-items: center; }
   .dna-empty { display: grid; gap: var(--linde-space-20); padding-block: var(--linde-space-32); }
   .dna-skeleton { display: grid; gap: var(--linde-space-24); padding-block: var(--linde-space-24); }
   .dna-skeleton-line, .dna-skeleton-block { display: block; border-radius: var(--linde-radius-md); background: var(--linde-color-border); }

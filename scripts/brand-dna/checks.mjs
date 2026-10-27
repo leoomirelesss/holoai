@@ -37,12 +37,21 @@ export async function dnaChecks(stack, origin, connection, record) {
       await page.getByLabel("Nombre de tu marca").fill("Marca local de diseño"); await page.getByLabel("¿Qué ofrece tu empresa?").fill("Una identidad propia para proyectos creativos.");
       await page.getByRole("button", { name: "Crear mi marca", exact: true }).click();
       const link = page.getByRole("link", { name: "Revisar Brand DNA", exact: true }); await link.waitFor(); url = await link.getAttribute("href"); id = url.split("/")[3];
-      await link.click(); await page.getByLabel("Nombre del perfil de marca").waitFor();
       const r = await call(`/brands/${id}`); workspaceId = r.data.brand.workspace_id;
       return r.status === 200 && r.data.current_revision.profile_document.identity.description === "Una identidad propia para proyectos creativos.";
     });
+    await check("dna-loading-skeleton-accessibility", async () => {
+      let release; const gate = new Promise(resolve => { release = resolve; });
+      const match = /\/api\/v1\/brands\/[0-9a-f-]+\?history=1&limit=20$/;
+      await page.route(match, async route => { await gate; await route.continue(); });
+      let ok;
+      try { await page.getByRole("link", { name: "Revisar Brand DNA", exact: true }).click(); await page.getByRole("status", { name: "Cargando Brand DNA" }).waitFor(); ok = await audit() && await page.getByLabel("Nombre del perfil de marca").count() === 0; await screenshot("D04-loading-desktop.png"); }
+      finally { release(); await page.unroute(match); }
+      await page.getByLabel("Nombre del perfil de marca").waitFor(); return ok;
+    });
     await check("dna-real-revision-and-authorized-navigation", async () => { const r = await call(`/brands/${id}`); return r.data.current_revision.revision_number === 2 && await page.getByRole("navigation", { name: "Navegación principal" }).first().getByRole("link", { name: "Brand DNA" }).getAttribute("href") === url; });
     await check("dna-five-required-fields-before-approval", async () => { const before = calls.length; await page.getByRole("button", { name: "Aprobar perfil", exact: true }).click(); await page.getByText("Completa este campo para aprobar el perfil.").first().waitFor(); return calls.slice(before).every(c => c.method === "GET") && await page.getByLabel("Idioma del contenido").evaluate(el => el === document.activeElement); });
+    await check("dna-incomplete-validation-accessibility", async () => { const ok = await audit(); await screenshot("D04-incomplete-desktop.png"); return ok; });
     await page.getByLabel("Nombre del perfil de marca").fill("Perfil creativo de validación");
     await page.getByLabel("Sitio web (opcional)", { exact: true }).fill("https://example.invalid/perfil");
     await page.getByLabel("Idioma del contenido").fill("es-MX"); await page.getByLabel("Tono de comunicación").fill("Cercano, claro y preciso."); await page.getByLabel("Público objetivo").fill("Equipos que desarrollan proyectos creativos propios.");
@@ -79,6 +88,7 @@ export async function dnaChecks(stack, origin, connection, record) {
     let patchCount = 0;
     await page.route("**/api/v1/brands/*/profile", async route => { patchCount++; await route.fetch(); await route.abort("failed"); });
     await check("dna-lost-save-response-blocks-retry", async () => { await page.getByLabel("Descripción", { exact: true }).fill("Guardado real con una respuesta de red perdida."); await saveButton().click(); await page.getByText("Escritura por comprobar", { exact: true }).waitFor(); return await saveButton().isDisabled(); });
+    await check("dna-uncertain-write-accessibility", audit);
     await page.unroute("**/api/v1/brands/*/profile");
     await check("dna-lost-save-reload-confirms-without-duplicate-revision", async () => { await page.reload(); await page.getByRole("status").filter({ hasText: "Guardado confirmado tras consultar la revisión actual." }).waitFor(); const r = await call(`/brands/${id}?history=1`); return patchCount === 1 && r.data.current_revision.revision_number === 6 && r.data.history.items.length === 6; });
     let approvals = 0;
@@ -87,6 +97,7 @@ export async function dnaChecks(stack, origin, connection, record) {
     await page.unroute("**/api/v1/brands/*/profile/approve");
     await check("dna-approval-reconciles-read-without-resubmission", async () => { await page.getByRole("button", { name: "Consultar versión actual", exact: true }).click(); await page.getByRole("status").filter({ hasText: "Aprobación confirmada tras consultar la revisión actual." }).waitFor(); return approvals === 1; });
     await check("dna-offline-preserves-edits", async () => { await page.getByLabel("Descripción", { exact: true }).fill("Edición conservada al perder conexión y sesión."); await context.setOffline(true); await saveButton().click(); await page.getByRole("alert").filter({ hasText: "No pudimos conectar" }).waitFor(); await context.setOffline(false); return await page.getByLabel("Descripción", { exact: true }).inputValue() === "Edición conservada al perder conexión y sesión."; });
+    await check("dna-offline-error-accessibility", audit);
     await check("dna-session-expiry-cannot-write", async () => { const before = calls.filter(c => c.method === "PATCH").length; await context.clearCookies(); await saveButton().click(); await page.waitForURL(/\/auth\/login/); return calls.filter(c => c.method === "PATCH").length === before; });
     await login(users[0]);
     await check("dna-same-account-recovers-after-login", async () => { await page.goto(`${origin}${url}`); await page.getByLabel("Descripción", { exact: true }).waitFor(); return await page.getByLabel("Descripción", { exact: true }).inputValue() === "Edición conservada al perder conexión y sesión."; });
@@ -96,6 +107,7 @@ export async function dnaChecks(stack, origin, connection, record) {
     await check("dna-second-workspace-and-brand-local-only", async () => { const w = await page.evaluate(async key => { const r = await fetch("/api/v1/workspaces", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": key }, body: JSON.stringify({ name: "Segundo espacio local" }) }); return { status: r.status, data: (await r.json()).data }; }, randomUUID()); const b = await call(`/workspaces/${w.data.workspace.id}/brands`, "POST", { name: "Segunda marca aislada" }); otherId = b.data.brand_id; return w.status === 200 && b.status === 201 && w.data.workspace.id !== workspaceId; });
     await check("dna-cross-workspace-api-hidden", async () => (await call(`/brands/${id}`)).status === 404);
     await check("dna-direct-unauthorized-route-is-404", async () => { const r = await page.goto(`${origin}${url}`); return r.status() === 404 && await page.getByText("Perfil creativo de validación", { exact: true }).count() === 0; });
+    await check("dna-denied-route-accessibility", audit);
     await check("dna-own-authorized-direct-url", async () => { await page.goto(`${origin}/app/brands/${otherId}/dna`); await page.getByLabel("Nombre del perfil de marca").waitFor(); return await page.getByLabel("Nombre del perfil de marca").inputValue() === "Segunda marca aislada"; });
     await stack.sql(`insert into public.memberships(workspace_id,user_id,role,status) values ('${workspaceId}','${users[1].id}','member','active');`);
     await check("dna-member-context-is-brand-membership-not-owned-workspace", async () => { await page.goto(`${origin}${url}`); await page.getByLabel("Descripción", { exact: true }).waitFor(); return await page.getByRole("button", { name: "Aprobar perfil", exact: true }).count() === 0 && await page.getByText("Solo el propietario puede aprobar este perfil. Puedes guardar borradores.", { exact: true }).count() === 1; });

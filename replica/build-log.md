@@ -96,3 +96,12 @@ Integración real completada: [Actions](https://github.com/leoomirelesss/holoai/
 ## Cierre documental visual de D02 — 2026-10-27
 
 Incorporadas las cuatro capturas PNG originales de `manual-onboarding-screens`, [Actions 40559911090](https://github.com/leoomirelesss/holoai/actions/runs/40559911090), commit aprobado `57b9dbd`, a [replica/design/screenshots/d02/](design/screenshots/d02/README.md). Verificados formato, decodificación, dimensiones, revisión visual y coincidencia SHA-256 con la descarga. Formulario desktop con fallo de almacenamiento, éxito desktop/móvil e incertidumbre móvil; anchos 1440/390 px. Referencias documentales actualizadas para consulta directa desde GitHub. Sin cambios de frontend, API, Supabase, SQL o tests, sin nuevas pruebas manuales ni regeneración de imágenes. PR #6 permanece para revisión, sin fusionar.
+
+
+## D04 — Brand DNA real (2026-10-27)
+
+Rama feat/d04-brand-dna-editor desde main bbb54f9. Ruta privada de perfil, cuatro secciones editables, resumen desktop2/3+1/3/móvil vertical, historial reciente, snapshots de aprobación, logo no disponible. Navegación desde alta D02 completa y destino autorizado en AppShell; no selector/listado nuevo. Se conservan D02 público, creaciones inciertas y Auth. [Diseño y estados](design/d04-brand-dna.md), [seguridad/recuperación](d04-brand-dna.md).
+
+Guardado y aprobación separados mediante API/If-Match; datos del perfil y cinco campos mínimos. Journal de pestaña por cuenta/marca, identidad y permisos revalidados antes de enviar, bloqueo de doble submit y comparación explícita de versión. Conflicto sin merge, edición conservada, copia/descarga y carga confirmada de versión nueva; escrituras inciertas solo se concilian mediante lectura antes de cualquier reintento. No se alteran API, SQL, políticas o servicios.
+
+Primera integración real: [Actions 40584300887](https://github.com/leoomirelesss/holoai/actions/runs/40584300887), 41 checks D04 con dos usuarios locales, 34 D02 privados, 93 API y82 RPC/RLS correctos, cleanup confirmado; 12 contratos D04,10 D02 y31 API. Local: TypeScript, ESLint, build y34 regresiones desktop/móvil correctos; contraste58 pares/0 fallos. Capturas reales de borrador, aprobación, draft nuevo, conflicto y miembro revisadas: composición/tipografía consistentes y sin overflow. Se amplía cobertura de skeleton/errores/404 antes de la entrega final. No se escriben datos de prueba en linde-dev. PR #7 sin fusionar; esperar aprobación antes de siguientes módulos.

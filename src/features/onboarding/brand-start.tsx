@@ -136,7 +136,7 @@ export function BrandStart({ persistenceScope, validationNonce }: { persistenceS
             </form>
             <div className="availability-note">
               <span className="availability-dot" aria-hidden="true" />
-              <div><p className="notice-title">Análisis del sitio: todavía no disponible</p><p className="notice-body">{persistent ? "Puedes crear una marca manualmente. El análisis web, la edición completa de Brand DNA y la generación de anuncios llegarán en etapas posteriores." : "Hoy puedes preparar tu borrador. El análisis, Brand DNA y la generación de anuncios llegarán en etapas posteriores."}</p></div>
+              <div><p className="notice-title">Análisis del sitio: todavía no disponible</p><p className="notice-body">{persistent ? "Puedes crear una marca manualmente y revisar su Brand DNA. El análisis web y la generación de anuncios llegarán en etapas posteriores." : "Hoy puedes preparar tu borrador. El análisis, Brand DNA y la generación de anuncios llegarán en etapas posteriores."}</p></div>
             </div>
           </Card>
 
@@ -157,7 +157,7 @@ export function BrandStart({ persistenceScope, validationNonce }: { persistenceS
           <p className="journey-description">Un contexto claro será el punto de partida de tu trabajo creativo.</p>
           <ol className="journey-steps" aria-label="Etapas de configuración">
             <li aria-current="step"><span className="step-number step-number--current">1</span><div><h3>Información de tu marca</h3><p>Una web o tus propios datos.</p><span className="step-state">Disponible ahora</span></div></li>
-            <li><span className="step-number">2</span><div><h3>Brand DNA</h3><p>Revisarás la identidad y la voz.</p><span className="step-state">Próxima etapa · No disponible</span></div></li>
+            <li><span className="step-number">2</span><div><h3>Brand DNA</h3><p>Revisarás la identidad y la voz.</p><span className="step-state">{persistent && manual.operation?.stage === "complete" && manual.operation.brandId ? "Disponible para tu marca" : "Próxima etapa · No disponible"}</span></div></li>
             <li><span className="step-number">3</span><div><h3>Productos</h3><p>Añadirás lo que quieres dar a conocer.</p><span className="step-state">Próxima etapa · No disponible</span></div></li>
           </ol>
           <Notice title="Tú mantienes el control"><p>Guardar datos no inicia un análisis, no genera contenido con IA y no implica ningún cargo.</p></Notice>

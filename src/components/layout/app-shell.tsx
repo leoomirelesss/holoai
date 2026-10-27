@@ -8,7 +8,7 @@ import { Icon } from "@/components/ui/icon";
 function Navigation({ onNavigate, href = "/", dnaHref, dnaActive = false }: { onNavigate?: () => void; href?: string; dnaHref?: string; dnaActive?: boolean }) {
   return (
     <nav aria-label="Navegación principal" className="navigation">
-      <Link href={href} aria-current={dnaActive && dnaHref ? undefined : "page"} className="nav-current" onClick={onNavigate}>Configurar marca <Icon name="chevron" /></Link>
+      <Link href={href} aria-current={dnaActive && dnaHref ? undefined : "page"} className={dnaActive && dnaHref ? "nav-context" : "nav-current"} onClick={onNavigate}>Configurar marca <Icon name="chevron" /></Link>
       {dnaHref && <Link href={dnaHref} aria-current={dnaActive ? "page" : undefined} className="nav-current" onClick={onNavigate}>Brand DNA <Icon name="chevron" /></Link>}
       <p className="nav-label">Siguientes etapas</p>
       <ul className="nav-planned">

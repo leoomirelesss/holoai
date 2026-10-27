@@ -36,11 +36,11 @@ export function DnaEditor(props: { brandId: string; scope: string; owner: boolea
       <p className="field-hint" role="status" aria-live="polite">{editor.message}</p>
       {editor.failure && <div role="alert" className="notice notice--warning dna-notice"><p>{messages[editor.failure]}</p>{editor.failure === "session" && <Link href="/auth/login?next=%2Fapp">Volver a iniciar sesión</Link>}</div>}
       {editor.pending && !editor.busy && <Notice tone="warning" title="Escritura por comprobar"><p>La respuesta no confirma el resultado. Consulta la versión actual antes de volver a guardar o aprobar; no repetiremos la escritura automáticamente.</p></Notice>}
-      {editor.form && <div className="dna-backup"><Button variant="ghost" onClick={() => void copy()}>Copiar mis cambios (JSON)</Button><Button variant="ghost" onClick={download}>Descargar mis cambios</Button><span role="status" className="field-hint">{backupMessage}</span></div>}
+      {editor.form && <div id="dna-backup" className="dna-backup"><Button variant="ghost" onClick={() => void copy()}>Copiar mis cambios (JSON)</Button><Button variant="ghost" onClick={download}>Descargar mis cambios</Button><span role="status" className="field-hint">{backupMessage}</span></div>}
       {(!editor.base || denied) && <>{editor.busy ? <DnaSkeleton /> : <div className="dna-empty"><h2>{denied ? "Acceso no disponible" : "No pudimos cargar el perfil"}</h2><p className="field-hint">No se mostrará un perfil vacío como si fuera la revisión guardada.</p><Button variant="secondary" onClick={() => void editor.consult()}>Volver a consultar</Button></div>}</>}
       {editor.base && editor.form && !denied && <>
         <nav className="dna-section-nav" aria-label="Secciones de Brand DNA"><a href="#dna-identity">Identidad</a><a href="#dna-visual">Identidad visual</a><a href="#dna-voice">Voz y audiencia</a><a href="#dna-competitors">Competidores</a></nav>
-        {editor.latest && <Card className="dna-section" aria-labelledby="dna-latest-title"><h2 id="dna-latest-title">Versión del servidor · revisión {editor.latest.revisionNumber}</h2><p className="field-hint">Consulta independiente. No se ha mezclado con tus cambios.</p><details><summary>Consultar contenido de la versión actual</summary><ProfileSummary form={editor.latest.form} full /></details><div className="draft-actions"><Button variant="secondary" disabled={editor.busy} onClick={() => void editor.consult(true)}>Cargar versión del servidor</Button></div></Card>}
+        {editor.latest && <Card id="dna-current" className="dna-section" aria-labelledby="dna-latest-title"><h2 id="dna-latest-title">Versión del servidor · revisión {editor.latest.revisionNumber}</h2><p className="field-hint">Consulta independiente. No se ha mezclado con tus cambios.</p><details><summary>Consultar contenido de la versión actual</summary><ProfileSummary form={editor.latest.form} full /></details><div className="draft-actions"><Button variant="secondary" disabled={editor.busy} onClick={() => void editor.consult(true)}>Cargar versión del servidor</Button></div></Card>}
         <div className="dna-grid">
           <form noValidate className="dna-form" aria-busy={editor.busy} onSubmit={e => { e.preventDefault(); editor.start("save"); }}>
             <DnaSections form={editor.form} errors={editor.errors} locked={editor.busy || Boolean(editor.pending) || editor.storageBad} onChange={editor.change} />
@@ -51,7 +51,13 @@ export function DnaEditor(props: { brandId: string; scope: string; owner: boolea
               <div className="draft-actions"><Button type="submit" disabled={blocked || (!editor.dirty && !editor.retry)}>{editor.busy ? "Comprobando operación…" : "Guardar borrador"}</Button>
                 {props.owner ? <Button variant="secondary" disabled={blocked || editor.dirty || editor.base.status !== "draft"} onClick={() => editor.start("approve")}>Aprobar perfil</Button> : <p className="field-hint">Solo el propietario puede aprobar este perfil. Puedes guardar borradores.</p>}
                 <Button variant="ghost" disabled={editor.busy} onClick={() => void editor.consult()}>Consultar versión actual</Button>
-              </div><p className="local-note">La edición se conserva en esta pestaña, separada por cuenta y marca. No cierres la pestaña sin guardar o descargar tus cambios.</p>
+              </div>
+              {editor.message && <p className="field-hint">{editor.message}</p>}
+              {editor.failure && <p className="field-error">{messages[editor.failure]}</p>}
+              {editor.pending && <p className="field-hint">Escritura pendiente de comprobar. Consulta la versión actual antes de volver a enviar.</p>}
+              {(editor.conflict || editor.pending) && <a href="#dna-backup" className="dna-inline-link">Respaldar mi edición</a>}
+              {editor.latest && <a href="#dna-current" className="dna-inline-link">Ver la versión consultada</a>}
+              <p className="local-note">La edición se conserva en esta pestaña, separada por cuenta y marca. No cierres la pestaña sin guardar o descargar tus cambios.</p>
             </Card>
           </form>
           <aside className="dna-summary" aria-labelledby="dna-summary-title"><Card className="dna-section"><span className="eyebrow">EN PERSPECTIVA</span><h2 id="dna-summary-title">Tu marca, en esencia.</h2><p className="field-hint">{editor.dirty ? "Vista previa de tu edición local; todavía sin guardar." : "Contenido de la revisión guardada."}</p><ProfileSummary form={editor.form} />

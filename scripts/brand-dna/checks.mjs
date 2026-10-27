@@ -13,6 +13,10 @@ export async function dnaChecks(stack, origin, connection, record) {
     const credentials = { email: `linde-dna-${randomUUID()}@example.invalid`, password: `Local!9a${randomBytes(24).toString("base64url")}` };
     await check(`dna-local-auth-${i}`, async () => { const r = await sdk.auth.signUp(credentials); users.push({ ...credentials, id: r.data.user?.id }); return !r.error && Boolean(r.data.user?.id); });
   }
+  async function fixtureFetch(route, options = {}) {
+    try { return await route.fetch({ ...options, timeout: 15000 }); }
+    catch { return null; } // Never let request logs/headers escape on fixture failures.
+  }
   const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } : {}) });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, serviceWorkers: "block", permissions: ["clipboard-read", "clipboard-write"] });
   const page = await context.newPage(); page.setDefaultTimeout(60000);
@@ -43,7 +47,7 @@ export async function dnaChecks(stack, origin, connection, record) {
     await check("dna-loading-skeleton-accessibility", async () => {
       let release; const gate = new Promise(resolve => { release = resolve; });
       const match = /\/api\/v1\/brands\/[0-9a-f-]+\?history=1&limit=20$/;
-      await page.route(match, async route => { await gate; await route.continue(); });
+      await page.route(match, async route => { await gate; await route.continue().catch(() => {}); });
       let ok;
       try { await page.getByRole("link", { name: "Revisar Brand DNA", exact: true }).click(); await page.getByRole("status", { name: "Cargando Brand DNA" }).waitFor(); ok = await audit() && await page.getByLabel("Nombre del perfil de marca").count() === 0; await screenshot("D04-loading-desktop.png"); }
       finally { release(); await page.unroute(match); }
@@ -68,6 +72,12 @@ export async function dnaChecks(stack, origin, connection, record) {
     });
     await check("dna-saved-desktop-axe-and-screenshot", async () => { const ok = await audit(); await screenshot("D04-draft-desktop.png"); return ok; });
     await check("dna-saved-mobile-axe-and-screenshot", async () => { await page.setViewportSize({ width: 390, height: 844 }); const ok = await audit(); await screenshot("D04-draft-mobile.png"); return ok; });
+    await check("dna-320px-and-enlarged-text-reflow", async () => {
+      await page.setViewportSize({ width: 320, height: 844 });
+      const style = await page.addStyleTag({ content: "html { font-size: 200%; }" });
+      const ok = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+      await style.evaluate(node => node.remove()); await page.setViewportSize({ width: 390, height: 844 }); return ok;
+    });
     await check("dna-d02-historical-receipt-retains-confirmed-detail-link", async () => {
       await page.getByRole("link", { name: "Volver a configurar marca", exact: true }).click();
       await page.getByRole("button", { name: "Comprobar guardado", exact: true }).click();
@@ -94,13 +104,13 @@ export async function dnaChecks(stack, origin, connection, record) {
     await check("dna-conflict-desktop-axe", async () => { const ok = await audit(); await screenshot("D04-conflict-desktop.png"); return ok; });
     await check("dna-explicit-reload-requires-confirmation", async () => { dismiss = true; await page.getByRole("button", { name: "Cargar versión del servidor", exact: true }).click(); dismiss = false; const kept = await page.getByLabel("Descripción", { exact: true }).inputValue() === "Mi edición local que todavía no se ha guardado."; await page.getByRole("button", { name: "Cargar versión del servidor", exact: true }).click(); await page.getByRole("status").filter({ hasText: "Versión del servidor cargada." }).waitFor(); return kept && await page.getByLabel("Tono de comunicación").inputValue() === "Cambio concurrente desde otra sesión autorizada."; });
     let patchCount = 0;
-    await page.route("**/api/v1/brands/*/profile", async route => { patchCount++; await route.fetch(); await route.abort("failed"); });
+    await page.route("**/api/v1/brands/*/profile", async route => { patchCount++; await fixtureFetch(route); await route.abort("failed").catch(() => {}); });
     await check("dna-lost-save-response-blocks-retry", async () => { await page.getByLabel("Descripción", { exact: true }).fill("Guardado real con una respuesta de red perdida."); await saveButton().click(); await page.getByText("Escritura por comprobar", { exact: true }).waitFor(); return await saveButton().isDisabled(); });
     await check("dna-uncertain-write-accessibility", audit);
     await page.unroute("**/api/v1/brands/*/profile");
     await check("dna-lost-save-reload-confirms-without-duplicate-revision", async () => { await page.reload(); await page.getByRole("status").filter({ hasText: "Guardado confirmado tras consultar la revisión actual." }).waitFor(); const r = await call(`/brands/${id}?history=1`); return patchCount === 1 && r.data.current_revision.revision_number === 6 && r.data.history.items.length === 6; });
     let approvals = 0;
-    await page.route("**/api/v1/brands/*/profile/approve", async route => { approvals++; await route.fetch(); await route.abort("failed"); });
+    await page.route("**/api/v1/brands/*/profile/approve", async route => { approvals++; await fixtureFetch(route); await route.abort("failed").catch(() => {}); });
     await check("dna-lost-approval-response-blocks-retry", async () => { await page.getByRole("button", { name: "Aprobar perfil", exact: true }).click(); await page.getByText("Escritura por comprobar", { exact: true }).waitFor(); return await page.getByRole("button", { name: "Aprobar perfil", exact: true }).isDisabled(); });
     await page.unroute("**/api/v1/brands/*/profile/approve");
     await check("dna-approval-reconciles-read-without-resubmission", async () => { await page.getByRole("button", { name: "Consultar versión actual", exact: true }).click(); await page.getByRole("status").filter({ hasText: "Aprobación confirmada tras consultar la revisión actual." }).waitFor(); return approvals === 1; });

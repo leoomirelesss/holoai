@@ -19,6 +19,10 @@ export async function onboardingChecks(stack, origin, connection, record) {
     const credentials = { email: `linde-onboarding-${randomUUID()}@example.invalid`, password: `Local!9a${randomBytes(24).toString("base64url")}` };
     await check(`local-auth-user-${i}`, async () => { const result = await sdk.auth.signUp(credentials); users.push({ ...credentials, id: result.data.user?.id }); return !result.error && Boolean(result.data.user?.id); });
   }
+  async function fixtureFetch(route, options = {}) {
+    try { return await route.fetch({ ...options, timeout: 15000 }); }
+    catch { return null; } // Never let request logs/headers escape on fixture failures.
+  }
   const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } : {}) });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, serviceWorkers: "block" });
   const page = await context.newPage();
@@ -135,7 +139,7 @@ export async function onboardingChecks(stack, origin, connection, record) {
     await check("existing-workspace-local-fixture", async () => (await call("/workspaces", "POST", { name: "Espacio local existente" }, { "Idempotency-Key": randomUUID() })).status === 200);
     await check("offline-keeps-draft-and-recovery-record", async () => { await context.setOffline(true); await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "No hay conexión" }).waitFor(); await context.setOffline(false); return (await savedDraft()).length === 2 && (await ledger()) === null; });
     let patchCount = 0;
-    await page.route("**/api/v1/brands/*/profile", async route => { patchCount++; await route.fetch(); await route.abort("failed"); });
+    await page.route("**/api/v1/brands/*/profile", async route => { patchCount++; await fixtureFetch(route); await route.abort("failed").catch(() => {}); });
     const beforeResume = traffic.length;
     await check("lost-patch-response-retains-confirmed-brand-id", async () => { await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "No hay conexión" }).waitFor(); return await page.getByText(/ID de marca confirmado:/).count() === 1; });
     await page.unroute("**/api/v1/brands/*/profile");
@@ -148,16 +152,16 @@ export async function onboardingChecks(stack, origin, connection, record) {
     await page.route("**/api/v1/brands/*/profile", async route => {
       const body = route.request().postDataJSON(); body.profile_document.identity.description = "Cambio concurrente de la misma cuenta local.";
       let status = 0;
-      try { status = (await route.fetch({ postData: JSON.stringify(body), timeout: 15000 })).status(); }
+      try { status = (await fixtureFetch(route, { postData: JSON.stringify(body) }))?.status() ?? 0; }
       finally { concurrentWrite.resolve(status); }
-      await route.continue();
+      await route.continue().catch(() => {});
     });
     await check("real-conflict-keeps-local-description", async () => { await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); let timer; const injectedStatus = await Promise.race([concurrentWrite.promise, new Promise(resolve => { timer = setTimeout(() => resolve(0), 30000); })]); clearTimeout(timer); record("conflict-fixture-write-http200", injectedStatus === 200, injectedStatus || undefined); await page.getByRole("alert").filter({ hasText: "han cambiado" }).waitFor(); return await page.getByLabel("¿Qué ofrece tu empresa?").inputValue() === "Una descripción propia para comprobar la persistencia local."; });
     await page.unroute("**/api/v1/brands/*/profile");
     await check("conflict-retry-never-overwrites-newer-revision", async () => { const before = traffic.length; await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "han cambiado" }).waitFor(); return traffic.slice(before).every(c => c.method === "GET"); });
     await resetAttempt();
     let creates = 0, uncertainCommitted = false;
-    await page.route("**/api/v1/workspaces/*/brands", async route => { creates++; const result = await route.fetch(); uncertainCommitted = result.status() === 201; await route.abort("failed"); });
+    await page.route("**/api/v1/workspaces/*/brands", async route => { creates++; const result = await fixtureFetch(route); uncertainCommitted = result?.status() === 201; await route.abort("failed").catch(() => {}); });
     await check("lost-create-response-is-uncertain", async () => { await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "No sabemos si la marca" }).waitFor(); return await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).isDisabled(); });
     await page.unroute("**/api/v1/workspaces/*/brands");
     await check("uncertain-create-survives-reload-without-retry", async () => { await page.reload(); await page.getByRole("alert").filter({ hasText: "No sabemos si la marca" }).waitFor(); return creates === 1 && uncertainCommitted && await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).isDisabled(); });

@@ -178,6 +178,9 @@
   .dna-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--linde-space-24); align-items: start; }
   .dna-form, .dna-summary { display: grid; gap: var(--linde-space-24); min-width: 0; }
   .dna-section { padding: var(--linde-space-24); display: grid; gap: var(--linde-space-20); min-width: 0; scroll-margin-block-start: var(--linde-space-24); }
+  .dna-section { overflow-wrap: anywhere; }
+  .dna-section .button { max-width: 100%; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+  .dna-competitor legend { max-width: 100%; }
   .dna-section h2, .dna-empty h2 { @apply text-title-sm; }
   .dna-section h3 { @apply text-label; }
   .dna-section-heading { display: grid; gap: var(--linde-space-8); }

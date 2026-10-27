@@ -119,6 +119,10 @@
   .draft-value { @apply text-body-strong; overflow-wrap: anywhere; margin-bottom: var(--linde-space-8); }
   .draft-description { @apply text-small; white-space: pre-wrap; margin-bottom: var(--linde-space-12); }
   .draft-actions { display: flex; flex-wrap: wrap; gap: var(--linde-space-8); margin-top: var(--linde-space-20); }
+  .manual-receipt { padding: var(--linde-space-20); }
+  .manual-receipt .saved-heading { flex-wrap: wrap; }
+  .operation-reference { overflow-wrap: anywhere; }
+  .field-error a { text-decoration: underline; }
   .auth-shell { min-height: 100svh; display: flex; flex-direction: column; }
   .auth-main { display: grid; align-items: center; justify-items: center; padding: var(--linde-space-32) var(--linde-layout-page-gutter-mobile); }
   .auth-content { width: 100%; max-width: calc(var(--linde-space-80) * 5 + var(--linde-space-64)); min-width: 0; }

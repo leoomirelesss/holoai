@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 export type BrandDraft = {
   version: 1;
@@ -19,9 +19,7 @@ function subscribe(callback: () => void) {
   return () => window.removeEventListener(event, callback);
 }
 
-function snapshot() {
-  try { return sessionStorage.getItem(key); } catch { return null; }
-}
+const scopedKey = (scope?: string) => scope ? `${key}.${scope}` : key;
 
 export function parseDraft(raw: string | null): BrandDraft | null {
   if (!raw || raw.length > 5000) return null;
@@ -36,18 +34,21 @@ export function parseDraft(raw: string | null): BrandDraft | null {
   } catch { return null; }
 }
 
-export function useBrandDraft() {
+export function useBrandDraft(scope?: string) {
+  const snapshot = useCallback(() => {
+    try { return sessionStorage.getItem(scopedKey(scope)); } catch { return null; }
+  }, [scope]);
   const raw = useSyncExternalStore(subscribe, snapshot, () => null);
   return parseDraft(raw);
 }
 
-export function saveDraft(draft: BrandDraft) {
-  sessionStorage.setItem(key, JSON.stringify(draft));
+export function saveDraft(draft: BrandDraft, scope?: string) {
+  sessionStorage.setItem(scopedKey(scope), JSON.stringify(draft));
   window.dispatchEvent(new Event(event));
 }
 
-export function removeDraft() {
-  sessionStorage.removeItem(key);
+export function removeDraft(scope?: string) {
+  sessionStorage.removeItem(scopedKey(scope));
   window.dispatchEvent(new Event(event));
 }
 

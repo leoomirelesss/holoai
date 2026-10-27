@@ -1,5 +1,5 @@
 feature,area,priority,original,clone,notes
-Importar web o introducir marca manualmente,onboarding,must,yes,partial,Documentado; D02; URL o Don't have a website; no se conoce cobertura del importador. UI foundation: D02 permite URL o entrada manual y borrador en sessionStorage; sin importación ni análisis; no implementa Brand DNA.
+Importar web o introducir marca manualmente,onboarding,must,yes,partial,Documentado; D02; URL o Don't have a website; no se conoce cobertura del importador. D02 pública conserva borradores locales. En /app el alta manual persiste marca y descripción mediante API V1; importación web y D03/D04 pendientes. Creación incierta no se reintenta.
 Elegir canal principal durante alta,onboarding,should,yes,no,Documentado; D02; Ads/Socials/Emails.
 Revisar y corregir Brand DNA antes de continuar,brand dna,must,yes,no,Documentado; D02/D04; Revisión de identidad visual y voz; requisito propuesto propio: aprobación explícita persistida.
 Editar nombre web descripción e idioma,brand dna,must,yes,no,Documentado; D04; Campos de Brand Identity.

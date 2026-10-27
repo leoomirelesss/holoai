@@ -20,12 +20,12 @@ export function ManualFeedback({ operation, failure, busy, progress }: { operati
     <p className="field-hint" role="status" aria-live="polite">{busy ? progress : operation?.stage === "complete" && !failure ? "Marca y descripción guardadas. Se conserva el borrador local." : operation?.brandId ? "Marca creada. La descripción todavía necesita confirmación de guardado." : ""}</p>
     {message && <div className="field-error" role="alert"><p>{message}</p>{failure === "session" && <Link href="/auth/login?next=%2Fapp">Volver a iniciar sesión</Link>}</div>}
     {operation && <Card className="manual-receipt" aria-labelledby="manual-operation-title">
-      <div className="saved-heading"><h2 id="manual-operation-title">Tu alta manual</h2><Badge>{operation.stage === "complete" ? "Guardado confirmado" : uncertain ? "Resultado incierto" : "Guardado pendiente"}</Badge></div>
+      <div className="saved-heading"><h2 id="manual-operation-title">Tu alta manual</h2><Badge>{busy ? "En curso" : operation.stage === "complete" ? "Guardado confirmado" : uncertain ? "Resultado incierto" : "Guardado pendiente"}</Badge></div>
       <p className="draft-value">{operation.name}</p>
       <p className="draft-description">{operation.description}</p>
       {operation.brandId && <p className="field-hint">ID de marca confirmado: <span className="operation-reference">{operation.brandId}</span></p>}
       <p className="field-hint">Referencia del intento: <span className="operation-reference">{operation.attempt}</span></p>
-      <p className="field-hint">El perfil permanece en borrador. Revisar y aprobar Brand DNA todavía no está disponible.</p>
+      <p className="field-hint">Esta alta no aprueba el perfil. Revisar y aprobar Brand DNA todavía no está disponible en esta pantalla.</p>
     </Card>}
   </>;
 }

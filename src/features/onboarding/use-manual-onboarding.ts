@@ -66,6 +66,7 @@ export function useManualOnboarding(scope?: string, validationNonce?: string) {
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
   function start(name: string, description: string) {
     if (!scope || !validationNonce || running.current) return;
+    if (!navigator.onLine) { setFailure("network"); return; }
     running.current = true; setBusy(true); setFailure(null); setProgress("Verificando tu sesión…");
     pending.current = { nonce: validationNonce, name, description };
     timer.current = setTimeout(() => {

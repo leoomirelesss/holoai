@@ -80,3 +80,12 @@ Seis endpoints y DAL autenticada mediante SSR/getUser, sesión/RLS y RPCs aproba
 Validación real en Actions: 93 comprobaciones API con dos usuarios locales, 82 regresiones RPC y 31 contratos correctos; TypeScript, ESLint y build de producción correctos. Regresión desktop/móvil local correcta, sin auth-live ni llamadas de pruebas a Auth remoto. [Evidencia y alcance](brand-api.md). Sin datos de prueba ni cambios en linde-dev. Ajuste mínimo de transporte Auth: HTTP solo loopback para el stack local; HTTPS remoto permanece requerido.
 
 [Versiones de migración](migration-history.md): GitHub20261026000100 y remoto20261027163720 confirmado por el propietario; reconciliación pendiente, sin repair/push/reset. Desviaciones acotadas de Architect: validación TypeScript sin nueva dependencia y ausencia del futuro recibo de borrado porque RLS oculta workspaces inactivos. Rama feat/brand-api-foundation, PR #5 sin fusionar. Esperar aprobación antes de avanzar a interfaz.
+
+
+## D02 — alta manual persistente (2026-10-27)
+
+Rama feat/d02-persistent-onboarding, base main bd28142 con PR #5 integrado. D02 privado consume los seis contratos existentes necesarios para alta (sin aprobación); GET current, bootstrap solo si falta workspace, creación de marca, GET revisión/ETag, PATCH descripción y lectura de confirmación. D02 público/URL permanece local. No se implementan D03/D04, extracción, IA o productos.
+
+Borradores públicos conservados; borradores privados y avance separados por cuenta. Revalidación servidor antes de enviar, bloqueo entre pestañas y registro previo de cada efecto. Resultado incierto de creación queda bloqueado: la API no permite reconciliar por intento ni deduplicar POST brands. Sin nuevas dependencias, tokens o cambios de API/SQL/RLS/Auth. [Flujo, reintentos y límites](d02-persistence.md), [estados visuales](design/d02-persistence.md).
+
+Validación local: TypeScript, ESLint, build, 10 contratos del controlador, 31 contratos API y 34 regresiones desktop/móvil correctos. 58 pares de contraste sin fallos AA. Un fallo inicial de infraestructura Playwright por directorio compartido se resolvió separando la salida de contratos y repitiendo la suite. La integración real de alta y sus capturas se valida separadamente en Actions con Supabase local aislado; no equivale a una prueba contra linde-dev.

@@ -70,6 +70,11 @@ export async function onboardingChecks(stack, origin, connection, record) {
     const publicDraft = await page.evaluate(() => sessionStorage.getItem("linde.brand-start.v1"));
     await check("real-ui-login-owner-a", () => login(users[0]));
     await manual();
+    await check("private-keyboard-and-autofill-semantics", async () => {
+      await page.getByLabel("¿Qué ofrece tu empresa?").focus(); await page.keyboard.press("Tab");
+      return await page.getByRole("button", { name: "Crear mi marca", exact: true }).evaluate(el => el === document.activeElement)
+        && await page.getByLabel("Nombre de tu marca").getAttribute("autocomplete") === "organization";
+    });
     await check("private-empty-required-and-focus", async () => {
       await page.getByLabel("Nombre de tu marca").fill("");
       await page.getByRole("button", { name: "Crear mi marca", exact: true }).click();
@@ -146,12 +151,22 @@ export async function onboardingChecks(stack, origin, connection, record) {
     await page.unroute("**/api/v1/brands/*/profile");
     await check("conflict-retry-never-overwrites-newer-revision", async () => { const before = traffic.length; await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "han cambiado" }).waitFor(); return traffic.slice(before).every(c => c.method === "GET"); });
     await resetAttempt();
-    let creates = 0;
-    await page.route("**/api/v1/workspaces/*/brands", async route => { creates++; await route.fetch(); await route.abort("failed"); });
+    let creates = 0, uncertainCommitted = false;
+    await page.route("**/api/v1/workspaces/*/brands", async route => { creates++; const result = await route.fetch(); uncertainCommitted = result.status() === 201; await route.abort("failed"); });
     await check("lost-create-response-is-uncertain", async () => { await page.getByRole("button", { name: "Crear mi marca", exact: true }).click(); await page.getByRole("alert").filter({ hasText: "No sabemos si la marca" }).waitFor(); return await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).isDisabled(); });
     await page.unroute("**/api/v1/workspaces/*/brands");
-    await check("uncertain-create-survives-reload-without-retry", async () => { await page.reload(); await page.getByRole("alert").filter({ hasText: "No sabemos si la marca" }).waitFor(); return creates === 1 && await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).isDisabled(); });
+    await check("uncertain-create-survives-reload-without-retry", async () => { await page.reload(); await page.getByRole("alert").filter({ hasText: "No sabemos si la marca" }).waitFor(); return creates === 1 && uncertainCommitted && await page.getByRole("button", { name: "Comprobar y continuar", exact: true }).isDisabled(); });
     await check("uncertain-mobile-accessibility", async () => { const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze(); await screenshot("D02-persistent-uncertain-mobile.png"); return audit.violations.length === 0 && await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth); });
+    await check("private-url-remains-local-and-keeps-manual-draft", async () => {
+      const draftBefore = (await savedDraft()).slice().sort().join("|"); const before = traffic.length;
+      await page.getByRole("button", { name: "Usar una dirección web", exact: true }).click();
+      await page.getByLabel("Dirección de tu empresa").fill("https://example.invalid/solo-borrador");
+      await page.getByRole("button", { name: "Guardar dirección", exact: true }).click();
+      await page.getByText(/Borrador guardado solo en esta pestaña/).waitFor();
+      const kept = await page.evaluate(() => Object.keys(sessionStorage).filter(k => k.startsWith("linde.brand-start.v1.") && !k.endsWith(".url")).map(k => sessionStorage.getItem(k)).sort().join("|"));
+      await page.getByRole("button", { name: "Comenzar manualmente", exact: true }).click();
+      return kept === draftBefore && traffic.length === before && (await ledger()).stage === "creating";
+    });
     await check("public-draft-and-public-behavior-unchanged", async () => { await page.goto(origin); return await page.evaluate(() => sessionStorage.getItem("linde.brand-start.v1")) === publicDraft && await page.getByRole("button", { name: "Crear mi marca", exact: true }).count() === 0; });
     await check("no-browser-runtime-errors", () => failures.length === 0);
   } finally { await context.close(); await browser.close(); }

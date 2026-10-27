@@ -149,8 +149,17 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Use preinstalled Chrome on the standard runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          browser_path="$(command -v google-chrome || command -v chromium || true)"
+          if [ -z "$browser_path" ]; then
+            echo 'A local Chrome/Chromium executable is required for real browser tests.'
+            exit 1
+          fi
+          "$browser_path" --version
+          printf 'PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=%s\n' "$browser_path" >> "$GITHUB_ENV"
 
       - name: Real D02 manual onboarding with isolated Supabase
         run: npm run test:onboarding

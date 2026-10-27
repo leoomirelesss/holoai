@@ -145,8 +145,8 @@ export function BrandStart({ persistenceScope, validationNonce }: { persistenceS
               <div className="saved-heading"><Icon name="check" /><h2 id="saved-draft-title">Borrador en esta pestaña</h2></div>
               <p className="draft-value">{draft.mode === "url" ? draft.website : draft.name}</p>
               {draft.mode === "manual" && <p className="draft-description">{draft.description}</p>}
-              <p className="field-hint">{dirty ? "Tienes cambios sin guardar. La descarga contiene el último borrador guardado." : "Es información aportada por ti; no un perfil generado ni analizado."}</p>
-              <div className="draft-actions"><Button variant="secondary" disabled={manual.busy || (persistent && locked && manual.operation?.stage !== "complete")} onClick={restore}>Recuperar borrador</Button><Button variant="ghost" onClick={download}>Descargar JSON</Button><Button variant="ghost" disabled={manual.busy || (persistent && locked && manual.operation?.stage !== "complete")} onClick={clear}>Eliminar borrador</Button></div>
+              <p className="field-hint">{persistent && locked && mode === "manual" ? "Conservamos los datos originales del intento. La edición del perfil estará disponible en una etapa posterior; puedes descargar este borrador." : dirty ? "Tienes cambios sin guardar. La descarga contiene el último borrador guardado." : "Es información aportada por ti; no un perfil generado ni analizado."}</p>
+              <div className="draft-actions"><Button variant="secondary" disabled={manual.busy || (persistent && locked && mode === "manual")} onClick={restore}>Recuperar borrador</Button><Button variant="ghost" onClick={download}>Descargar JSON</Button><Button variant="ghost" disabled={manual.busy || (persistent && locked && mode === "manual" && manual.operation?.stage !== "complete")} onClick={clear}>Eliminar borrador</Button></div>
             </Card>
           )}
         </div>

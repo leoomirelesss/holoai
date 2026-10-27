@@ -119,3 +119,11 @@ npm run test:db
 ```
 
 Requiere Docker. Crea un PostgreSQL desechable, sin red/puertos ni claves de Supabase; prueba las migraciones, RLS e integridad con identidades sintéticas y elimina el contenedor. No toca `linde-dev`. Alcance, contratos y límites en [replica/brand-data-foundation.md](replica/brand-data-foundation.md). No aplicar migraciones remotas hasta aprobar el PR de esta fase.
+
+### Integración con Supabase Auth y PostgREST locales
+
+```bash
+SUPABASE_CLI=/ruta/a/supabase npm run test:supabase
+```
+
+Requiere la CLI oficial 2.122.0 y Docker. Crea un proyecto temporal sin enlace remoto, aplica migraciones con `--local` y prueba dos usuarios generados por Auth local con JWT reales. No utiliza claves ni cuentas de `linde-dev`. Falla explícitamente si el stack no arranca; no utiliza el fixture de Auth del test SQL. Resultado sin credenciales en `replica/supabase-integration-results.json`; detalles y límites en [replica/supabase-integration.md](replica/supabase-integration.md).

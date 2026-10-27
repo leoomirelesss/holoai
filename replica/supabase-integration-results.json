@@ -1,0 +1,10 @@
+{
+  "cli": "2.122.0",
+  "status": "failed",
+  "stage": "local-stack-start",
+  "checks": [],
+  "failureCategory": "disk-space",
+  "cleanup": true,
+  "migration": "supabase/migrations/20261026000100_brand_data_foundation.sql",
+  "migrationSha256": "7c9dc238ae4070616e918d5a4ab077e2c9179f44c68a79a3f90ae6315dec262c"
+}

@@ -81,3 +81,9 @@ Preparadas, **sin aplicar a linde-dev**, cuatro tablas: workspaces, memberships,
 Validación: 163 aserciones SQL locales repetidas en otra base vacía; dos conexiones concurrentes verifican deduplicación de bootstrap y rechazo de versión obsoleta. Dos usuarios sintéticos aislados, anónimos sin acceso, FKs compuestas y permisos comprobados. PostgreSQL local real con fixture mínimo de Auth, no stack Supabase completo ni evidencia de aplicación remota. 34 regresiones Playwright, TypeScript, ESLint y build correctos; casos remotos de Auth no repetidos en esta fase. [Decisiones, comandos, resultados y límites](brand-data-foundation.md).
 
 Pendientes de aprobación: aplicar migraciones y validar con stack/roles/JWT reales del destino en una etapa autorizada. No se avanzan módulos de producto, IA, jobs ni UI de Brand DNA.
+
+## Integración Supabase local — ejecución bloqueada (2026-10-27)
+
+Rama `test/supabase-integration`, desde main con PR #3 integrado. Suite reproducible preparada para dos usuarios creados por Auth local, JWT reales y operaciones PostgREST/RPC, sin fixture que sustituya Auth. **No completada**: CLI 2.122.0/Docker disponibles, pero imágenes estándar fallan al extraer PostgreSQL por ENOSPC en disco de 32 GB con driver vfs; variante compacta tampoco pasó salud. 0 checks de integración, sin aplicar la migración aprobada ni crear usuarios/sesiones. Migraciones y frontend intactos; proyecto remoto sin cambios.
+
+TypeScript, ESLint, build y 34 regresiones de navegador correctos (1 worker/timeout 90 s tras timeouts previos con dos workers). Instancias locales limpiadas y caché introducida retirada selectivamente. [Evidencia, alcance, comando y todos los casos pendientes](supabase-integration.md). Hace falta repetir en un entorno local capaz de arrancar el stack oficial; no sustituir por la prueba SQL con Auth mínimo. No aplicar migraciones a linde-dev ni avanzar a otras fases.

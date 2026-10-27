@@ -71,3 +71,12 @@ Superada la validación positiva de login UI, getUser remoto, `/app`, recarga, l
 ## Base de datos — fase 1 (2026-10-26)
 
 `feat/brand-data-foundation` desde main actualizado con Auth integrado. Cuatro tablas y RPCs SQL de tenancy/perfil/revisiones preparados, sin frontend ni migraciones remotas. RLS, roles, FKs compuestas, bootstrap atómico y concurrencia probados en PostgreSQL local: 163 aserciones, repetidas tras reconstrucción desde cero. 34 regresiones de navegador, TypeScript, lint y build correctos. [Detalle y límites de evidencia](brand-data-foundation.md). No equivale a implementar D04 ni conectar D02 a la base; Architect/Design/Recon intactos. PR para revisión, sin merge; esperar aprobación antes de aplicar a Supabase.
+
+
+## API V1 de marcas — 2026-10-27
+
+Seis endpoints y DAL autenticada mediante SSR/getUser, sesión/RLS y RPCs aprobadas. Bootstrap idempotente, selección de workspace desde membership, creación de marca, lectura/historial, guardado parcial con If-Match y aprobación owner-only. CSRF/Origin, JSON acotado, validación, errores seguros y SQLSTATE40001→HTTP409. No se conectan D02/D03/D04 ni se modifican migraciones o políticas.
+
+Validación real en Actions: 93 comprobaciones API con dos usuarios locales, 82 regresiones RPC y 31 contratos correctos; TypeScript, ESLint y build de producción correctos. Regresión desktop/móvil local correcta, sin auth-live ni llamadas de pruebas a Auth remoto. [Evidencia y alcance](brand-api.md). Sin datos de prueba ni cambios en linde-dev. Ajuste mínimo de transporte Auth: HTTP solo loopback para el stack local; HTTPS remoto permanece requerido.
+
+[Versiones de migración](migration-history.md): GitHub20261026000100 y remoto20261027163720 confirmado por el propietario; reconciliación pendiente, sin repair/push/reset. Desviaciones acotadas de Architect: validación TypeScript sin nueva dependencia y ausencia del futuro recibo de borrado porque RLS oculta workspaces inactivos. Rama feat/brand-api-foundation, PR #5 sin fusionar. Esperar aprobación antes de avanzar a interfaz.

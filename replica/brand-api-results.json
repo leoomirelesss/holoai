@@ -206,6 +206,14 @@
       "passed": true
     },
     {
+      "name": "api-nul-profile-rejected",
+      "passed": true
+    },
+    {
+      "name": "api-malformed-unicode-rejected",
+      "passed": true
+    },
+    {
       "name": "api-save-profile",
       "passed": true
     },
@@ -373,6 +381,6 @@
   "cleanup": true,
   "scope": "brand-api",
   "conflictHttpStatus": 409,
-  "executionUrl": "https://github.com/leoomirelesss/holoai/actions/runs/40549066939",
-  "executionSha": "e2a8aa2a52120a80fbbd513d9747f38f2de50ab4"
+  "executionUrl": "https://github.com/leoomirelesss/holoai/actions/runs/40551737103",
+  "executionSha": "3752097f0b362d53d8b414c9f2aacce81d04602f"
 }

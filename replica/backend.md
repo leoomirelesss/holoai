@@ -94,3 +94,12 @@ TypeScript, ESLint, build y 34 regresiones de navegador correctos (1 worker/time
 El bloqueo local anterior queda superado con el runner gratuito ubuntu-24.04/overlay2 y 85 GiB libres, sin secretos ni permisos de escritura del workflow. Ejecuciones [automática](https://github.com/leoomirelesss/holoai/actions/runs/40533266341) y [manual](https://github.com/leoomirelesss/holoai/actions/runs/40533406411) correctas: **82 comprobaciones** con dos usuarios de GoTrue, JWT reales, PostgREST/RPC, RLS, roles, historial/aprobación y concurrencia. Evidencia exclusivamente JSON sanitizado, checksum de migración coincidente y cleanup=true. Corregido únicamente un filtro de evidencia que rechazaba `_` en nombres de checks; migración, frontend y Auth de aplicación intactos.
 
 Detalle y limitaciones en [supabase-integration.md](supabase-integration.md): el conflicto SQLSTATE40001 devuelve HTTP500 en RPC directo; mapear a409 corresponde a la futura DAL, sin afirmar una API que aún no existe. linde-dev no se enlazó ni modificó; la aprobación del PR no ejecuta migraciones remotas.
+
+
+## API V1 de marcas — 2026-10-27
+
+Seis endpoints y DAL autenticada mediante SSR/getUser, sesión/RLS y RPCs aprobadas. Bootstrap idempotente, selección de workspace desde membership, creación de marca, lectura/historial, guardado parcial con If-Match y aprobación owner-only. CSRF/Origin, JSON acotado, validación, errores seguros y SQLSTATE40001→HTTP409. No se conectan D02/D03/D04 ni se modifican migraciones o políticas.
+
+Validación real en Actions: 93 comprobaciones API con dos usuarios locales, 82 regresiones RPC y 31 contratos correctos; TypeScript, ESLint y build de producción correctos. Regresión desktop/móvil local correcta, sin auth-live ni llamadas de pruebas a Auth remoto. [Evidencia y alcance](brand-api.md). Sin datos de prueba ni cambios en linde-dev. Ajuste mínimo de transporte Auth: HTTP solo loopback para el stack local; HTTPS remoto permanece requerido.
+
+[Versiones de migración](migration-history.md): GitHub20261026000100 y remoto20261027163720 confirmado por el propietario; reconciliación pendiente, sin repair/push/reset. Desviaciones acotadas de Architect: validación TypeScript sin nueva dependencia y ausencia del futuro recibo de borrado porque RLS oculta workspaces inactivos. Rama feat/brand-api-foundation, PR #5 sin fusionar. Esperar aprobación antes de avanzar a interfaz.

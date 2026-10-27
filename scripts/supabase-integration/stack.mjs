@@ -83,6 +83,11 @@ export async function localStack(onStage = () => {}) {
       if (result.code !== 0) throw new Error("Local SQL assertion failed");
       return result.stdout.trim();
     },
+    async rest(action) {
+      if (!["pause", "unpause"].includes(action)) throw new Error("Invalid local service action");
+      const result = await command("docker", [action, `supabase_rest_${project}`]);
+      if (result.code !== 0) throw new Error("Local service action failed");
+    },
     async images() {
       const result = await command("docker", ["ps", "--filter", `label=com.supabase.cli.project=${project}`, "--format", "{{.Image}}"]);
       return result.stdout.trim().split("\n").filter(Boolean).sort();

@@ -9,6 +9,16 @@ on:
       - scripts/test-supabase-integration.mjs
       - scripts/supabase-integration/**
       - supabase/migrations/**
+      - src/app/api/**
+      - src/lib/api/**
+      - src/lib/data/**
+      - src/lib/auth/config.ts
+      - src/features/brands/**
+      - src/features/workspaces/**
+      - scripts/test-brand-api.mjs
+      - scripts/brand-api/**
+      - tests/api-contracts.spec.ts
+      - playwright.api.config.mjs
       - package.json
       - package-lock.json
   workflow_dispatch:
@@ -37,6 +47,7 @@ jobs:
         run: |
           # Never upload the committed historical result if setup cannot run.
           printf '%s\n' '{"cli":"2.122.0","status":"failed","stage":"ci-preflight","checks":[],"cleanup":true}' > replica/supabase-integration-results.json
+          cp replica/supabase-integration-results.json replica/brand-api-results.json
 
       - name: Node 24
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
@@ -82,6 +93,12 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
 
+      - name: TypeScript, ESLint and API contracts
+        run: |
+          npm run typecheck
+          npm run lint
+          npm run test:api:contracts
+
       - name: Run real local Supabase integration
         run: npm run test:supabase
 
@@ -102,3 +119,23 @@ jobs:
           if-no-files-found: error
           retention-days: 7
           include-hidden-files: false
+
+      - name: Run real Brand API against isolated local stack
+        run: npm run test:api
+
+      - name: Sanitize Brand API evidence
+        id: api_evidence
+        if: always()
+        env:
+          EXECUTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EXECUTION_SHA: ${{ github.sha }}
+        run: node scripts/supabase-integration/ci-evidence.mjs replica/brand-api-results.json
+
+      - name: Upload sanitized Brand API JSON
+        if: ${{ always() && steps.api_evidence.outputs.safe == 'true' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: brand-api-sanitized
+          path: replica/brand-api-results.json
+          if-no-files-found: error
+          retention-days: 7

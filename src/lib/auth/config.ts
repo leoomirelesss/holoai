@@ -5,7 +5,8 @@ export function getAuthConfig() {
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) throw new Error("AUTH_CONFIGURATION_MISSING");
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || parsed.username || parsed.password || key.startsWith("sb_secret_")) {
+  const localHttp = parsed.protocol === "http:" && ["127.0.0.1", "localhost", "[::1]"].includes(parsed.hostname);
+  if ((parsed.protocol !== "https:" && !localHttp) || parsed.username || parsed.password || key.startsWith("sb_secret_")) {
     throw new Error("AUTH_CONFIGURATION_INVALID");
   }
   // Legacy JWTs must be anon, never service_role. Publishable keys are opaque.

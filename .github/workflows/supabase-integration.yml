@@ -1,0 +1,108 @@
+name: Supabase local integration
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - .github/workflows/supabase-integration.yml
+      - scripts/test-supabase-integration.mjs
+      - scripts/supabase-integration/**
+      - supabase/migrations/**
+      - package.json
+      - package-lock.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-local-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    name: Real local Auth, PostgREST and RLS
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      SUPABASE_TELEMETRY_DISABLED: 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+
+      - name: Initialize fresh failure evidence
+        run: |
+          node --input-type=module <<'JS'
+          import { writeFileSync } from 'node:fs';
+          // Never upload the historical, committed ENOSPC result as a new run.
+          writeFileSync('replica/supabase-integration-results.json', JSON.stringify({
+            cli: '2.122.0', status: 'failed', stage: 'ci-preflight', checks: [], cleanup: true
+          }, null, 2) + '\n');
+          JS
+
+      - name: Check Docker and free ephemeral runner space if needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          test "$RUNNER_OS" = Linux
+          df -h /
+          driver=$(docker info --format '{{.Driver}}')
+          echo "Docker storage driver: $driver"
+          test "$driver" != vfs
+          free_bytes=$(df -B1 --output=avail / | tail -1 | tr -d ' ')
+          minimum_bytes=$((30 * 1024 * 1024 * 1024))
+          if (( free_bytes < minimum_bytes )); then
+            # Only unused preinstalled SDKs on this disposable GitHub-hosted VM.
+            # No Docker prune, shared volumes, package caches or user directories.
+            sudo rm -rf -- /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
+          fi
+          df -h /
+          free_bytes=$(df -B1 --output=avail / | tail -1 | tr -d ' ')
+          if (( free_bytes < minimum_bytes )); then
+            echo 'Insufficient local disk space; no paid runner or remote fallback.'
+            exit 1
+          fi
+
+      - name: Install verified Supabase CLI 2.122.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/linde-cli/bin"
+          curl --fail --silent --show-error --location --retry 3 \
+            https://github.com/supabase/cli/releases/download/v2.122.0/supabase_linux_amd64.tar.gz \
+            --output "$RUNNER_TEMP/linde-cli/cli.tar.gz"
+          echo "59ed066847b98d7461c60e9109d40cab6b9756177ce06ebb05b51338519f5136  $RUNNER_TEMP/linde-cli/cli.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/linde-cli/cli.tar.gz" -C "$RUNNER_TEMP/linde-cli/bin" supabase
+          printf '%s\n' "$RUNNER_TEMP/linde-cli/bin" >> "$GITHUB_PATH"
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run real local Supabase integration
+        run: npm run test:supabase
+
+      - name: Prepare sanitized evidence only
+        if: always()
+        env:
+          EXECUTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EXECUTION_SHA: ${{ github.sha }}
+        run: node scripts/supabase-integration/ci-evidence.mjs
+
+      - name: Upload sanitized JSON
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: supabase-integration-sanitized
+          path: replica/supabase-integration-results.json
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: false

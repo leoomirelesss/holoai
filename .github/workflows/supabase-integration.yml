@@ -19,6 +19,12 @@ on:
       - scripts/brand-api/**
       - tests/api-contracts.spec.ts
       - playwright.api.config.mjs
+      - src/features/onboarding/**
+      - src/app/app/page.tsx
+      - scripts/onboarding/**
+      - scripts/test-onboarding.mjs
+      - tests/manual-operation.spec.ts
+      - playwright.onboarding-contracts.config.mjs
       - package.json
       - package-lock.json
   workflow_dispatch:
@@ -48,6 +54,8 @@ jobs:
           # Never upload the committed historical result if setup cannot run.
           printf '%s\n' '{"cli":"2.122.0","status":"failed","stage":"ci-preflight","checks":[],"cleanup":true}' > replica/supabase-integration-results.json
           cp replica/supabase-integration-results.json replica/brand-api-results.json
+          cp replica/supabase-integration-results.json replica/onboarding-results.json
+          rm -f -- replica/clone-screens/D02-persistent-*.png
 
       - name: Node 24
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
@@ -98,6 +106,7 @@ jobs:
           npm run typecheck
           npm run lint
           npm run test:api:contracts
+          npm run test:onboarding:contracts
 
       - name: Run real local Supabase integration
         run: npm run test:supabase
@@ -139,3 +148,46 @@ jobs:
           path: replica/brand-api-results.json
           if-no-files-found: error
           retention-days: 7
+
+      - name: Use preinstalled Chrome on the standard runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          browser_path="$(command -v google-chrome || command -v chromium || true)"
+          if [ -z "$browser_path" ]; then
+            echo 'A local Chrome/Chromium executable is required for real browser tests.'
+            exit 1
+          fi
+          "$browser_path" --version
+          printf 'PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=%s\n' "$browser_path" >> "$GITHUB_ENV"
+
+      - name: Real D02 manual onboarding with isolated Supabase
+        run: npm run test:onboarding
+
+      - name: Sanitize onboarding evidence
+        id: onboarding_evidence
+        if: always()
+        env:
+          EXECUTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EXECUTION_SHA: ${{ github.sha }}
+        run: node scripts/supabase-integration/ci-evidence.mjs replica/onboarding-results.json
+
+      - name: Upload sanitized onboarding JSON
+        if: ${{ always() && steps.onboarding_evidence.outputs.safe == 'true' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: manual-onboarding-sanitized
+          path: replica/onboarding-results.json
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: false
+
+      - name: Upload local fixture screenshots only
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: manual-onboarding-screens
+          path: replica/clone-screens/D02-persistent-*.png
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: false

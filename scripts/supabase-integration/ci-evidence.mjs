@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 
 // Reconstruct a closed schema; never upload CLI logs, responses, headers or workdir.
 const path = process.argv[2] ?? "replica/supabase-integration-results.json";
-if (!["replica/supabase-integration-results.json", "replica/brand-api-results.json"].includes(path)) throw new Error("Unsupported evidence path");
+if (!["replica/supabase-integration-results.json", "replica/brand-api-results.json", "replica/onboarding-results.json"].includes(path)) throw new Error("Unsupported evidence path");
 const migration = "supabase/migrations/20261026000100_brand_data_foundation.sql";
 const source = JSON.parse(await readFile(path, "utf8"));
 const categories = ["disk-space", "container-health", "image-download", "network-timeout", "configuration", "permission", "local-cli-operation"];
@@ -23,7 +23,7 @@ if (checks.some((check) => !safeName(check.name) || typeof check.passed !== "boo
     checks: checks.map(({ name, passed }) => ({ name, passed })),
     cleanup: source.cleanup === true,
   };
-  if (source.scope === "brand-api") result.scope = source.scope;
+  if (["brand-api", "manual-onboarding"].includes(source.scope)) result.scope = source.scope;
   if (Number.isInteger(source.observedHttpStatus) && source.observedHttpStatus >= 100 && source.observedHttpStatus <= 599) result.observedHttpStatus = source.observedHttpStatus;
   if (categories.includes(source.failureCategory)) result.failureCategory = source.failureCategory;
   if (Number.isInteger(source.conflictHttpStatus)) result.conflictHttpStatus = source.conflictHttpStatus;

@@ -168,3 +168,51 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: var(--linde-motion-reduced) !important; scroll-behavior: auto !important; }
 }
+
+@layer components {
+  .nav-context { @apply text-small text-text-muted rounded-sm; display: flex; align-items: center; justify-content: space-between; min-height: var(--linde-control-touch-target); padding: var(--linde-space-12); text-decoration: none; }
+  .dna-page { width: 100%; }
+  .dna-page .badge { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+  .dna-heading { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: var(--linde-space-16); }
+  .dna-section-nav { display: flex; flex-wrap: wrap; gap: var(--linde-space-8); margin-block: var(--linde-space-24); }
+  .dna-section-nav a { @apply text-small text-accent rounded-sm; padding: var(--linde-space-12); border: var(--linde-control-input-border) solid var(--linde-color-border-input); }
+  .dna-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--linde-space-24); align-items: start; }
+  .dna-form, .dna-summary { display: grid; gap: var(--linde-space-24); min-width: 0; }
+  .dna-section { padding: var(--linde-space-24); display: grid; gap: var(--linde-space-20); min-width: 0; scroll-margin-block-start: var(--linde-space-24); }
+  .dna-section { overflow-wrap: anywhere; }
+  .dna-section .button { max-width: 100%; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+  .dna-competitor legend { max-width: 100%; }
+  .dna-section h2, .dna-empty h2 { @apply text-title-sm; }
+  .dna-section h3 { @apply text-label; }
+  .dna-section-heading { display: grid; gap: var(--linde-space-8); }
+  .dna-summary-content, .dna-repeatable { display: grid; gap: var(--linde-space-12); min-width: 0; }
+  .dna-summary-content p, .dna-facts dd { overflow-wrap: anywhere; white-space: pre-wrap; }
+  .dna-facts { display: grid; gap: var(--linde-space-8); margin: 0; }
+  .dna-facts dt { @apply text-caption text-text-muted; }
+  .dna-facts dd { @apply text-small; margin: 0 0 var(--linde-space-8); }
+  .dna-color-row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--linde-space-8); }
+  .dna-color-row .field { flex: 1; min-width: var(--linde-space-80); }
+  .dna-swatch { display: inline-block; flex-shrink: 0; width: var(--linde-space-32); height: var(--linde-space-32); border-radius: var(--linde-radius-sm); border: var(--linde-control-input-border) solid var(--linde-color-border-input); }
+  .dna-palette, .dna-backup { display: flex; flex-wrap: wrap; gap: var(--linde-space-8); }
+  .dna-backup { margin-block: var(--linde-space-16); }
+  .dna-competitor { display: grid; gap: var(--linde-space-16); border: var(--linde-control-input-border) solid var(--linde-color-border); border-radius: var(--linde-radius-md); padding: var(--linde-space-16); min-width: 0; }
+  .dna-competitor legend { @apply text-label; padding-inline: var(--linde-space-8); }
+  .dna-approved { border-top: var(--linde-control-input-border) solid var(--linde-color-border); padding-top: var(--linde-space-20); }
+  .dna-history { @apply text-small; padding-left: var(--linde-space-20); margin: 0; }
+  .dna-history li { padding: var(--linde-space-8) 0; }
+  .dna-history span { @apply text-text-muted; display: block; }
+  .dna-section summary { @apply text-small text-accent; cursor: pointer; padding-block: var(--linde-space-12); min-height: var(--linde-control-touch-target); }
+  .dna-section details[open] > .dna-summary-content { margin-top: var(--linde-space-16); }
+  .dna-notice { margin-block: var(--linde-space-16); display: grid; }
+  .dna-notice a { text-decoration: underline; }
+  .dna-inline-link { @apply text-small text-accent; text-decoration: underline; min-height: var(--linde-control-touch-target); display: inline-flex; align-items: center; }
+  .dna-empty { display: grid; gap: var(--linde-space-20); padding-block: var(--linde-space-32); }
+  .dna-skeleton { display: grid; gap: var(--linde-space-24); padding-block: var(--linde-space-24); }
+  .dna-skeleton-line, .dna-skeleton-block { display: block; border-radius: var(--linde-radius-md); background: var(--linde-color-border); }
+  .dna-skeleton-line { height: var(--linde-space-24); width: 60%; }
+  .dna-skeleton-block { height: calc(var(--linde-space-80) * 2); }
+}
+@variant wide {
+  .dna-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  .dna-section { padding: var(--linde-space-32); }
+}

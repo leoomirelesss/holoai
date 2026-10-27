@@ -1,11 +1,11 @@
 feature,area,priority,original,clone,notes
-Importar web o introducir marca manualmente,onboarding,must,yes,partial,Documentado; D02; URL o Don't have a website; no se conoce cobertura del importador. D02 pública conserva borradores locales. En /app el alta manual persiste marca y descripción mediante API V1; importación web y D03/D04 pendientes. Creación incierta no se reintenta.
+Importar web o introducir marca manualmente,onboarding,must,yes,partial,Documentado; D02; URL o Don't have a website; no se conoce cobertura del importador. D02 pública conserva borradores locales. En /app el alta manual persiste marca y descripción mediante API V1; importación web y D03 pendientes; D04 disponible para marcas autorizadas. Creación incierta no se reintenta.
 Elegir canal principal durante alta,onboarding,should,yes,no,Documentado; D02; Ads/Socials/Emails.
-Revisar y corregir Brand DNA antes de continuar,brand dna,must,yes,no,Documentado; D02/D04; Revisión de identidad visual y voz; requisito propuesto propio: aprobación explícita persistida.
-Editar nombre web descripción e idioma,brand dna,must,yes,no,Documentado; D04; Campos de Brand Identity.
-Gestionar logo colores y fuente,brand dna,must,yes,no,Documentado; D04; Visual identity; no se comprobó calidad de aplicación en imágenes.
-Definir tono y público objetivo,brand dna,must,yes,no,Documentado; D04; Voice & audience editable.
-Gestionar competidores sugeridos y manuales,brand dna,should,yes,no,Documentado; D04; Añadir quitar y ampliar sugerencias; no copiar base de datos ajena.
+Revisar y corregir Brand DNA antes de continuar,brand dna,must,yes,yes,Documentado; D02/D04; Revisión de identidad visual y voz; requisito propuesto propio: aprobación explícita persistida. D04: revisión guardada y aprobación real por propietario; ETag y cinco campos mínimos; historial conservado.
+Editar nombre web descripción e idioma,brand dna,must,yes,yes,Documentado; D04; Campos de Brand Identity. D04: campos del perfil editables con límites API v1; borradores y confirmación real.
+Gestionar logo colores y fuente,brand dna,must,yes,partial,Documentado; D04; Visual identity; no se comprobó calidad de aplicación en imágenes. D04: hasta12 colores HEX y familia tipográfica del contrato; logo no disponible sin assets/Storage.
+Definir tono y público objetivo,brand dna,must,yes,yes,Documentado; D04; Voice & audience editable. D04: edición persistente de tono y audiencia; requisitos de aprobación verificados.
+Gestionar competidores sugeridos y manuales,brand dna,should,yes,partial,Documentado; D04; Añadir quitar y ampliar sugerencias; no copiar base de datos ajena. D04: hasta20 competidores manuales con URL HTTPS opcional; sin sugerencias automáticas ni investigación web.
 Importar hasta diez productos en onboarding,catalogo,should,yes,no,Documentado; D02; Límite documentado del alta; requiere ≥1 producto para continuar.
 Cargar y editar productos o servicios,catalogo,must,yes,no,Documentado; D02/D06; Nombre descripción fotos URL opcional; autosave en alta frente a Save en catálogo: discrepancia UX.
 Importar producto individual desde URL,catalogo,must,yes,no,Documentado; D06/D27; Nombre descripción e imágenes revisables; protección SSRF necesaria en alternativa propia.

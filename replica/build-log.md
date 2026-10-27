@@ -96,3 +96,19 @@ Integración real completada: [Actions](https://github.com/leoomirelesss/holoai/
 ## Cierre documental visual de D02 — 2026-10-27
 
 Incorporadas las cuatro capturas PNG originales de `manual-onboarding-screens`, [Actions 40559911090](https://github.com/leoomirelesss/holoai/actions/runs/40559911090), commit aprobado `57b9dbd`, a [replica/design/screenshots/d02/](design/screenshots/d02/README.md). Verificados formato, decodificación, dimensiones, revisión visual y coincidencia SHA-256 con la descarga. Formulario desktop con fallo de almacenamiento, éxito desktop/móvil e incertidumbre móvil; anchos 1440/390 px. Referencias documentales actualizadas para consulta directa desde GitHub. Sin cambios de frontend, API, Supabase, SQL o tests, sin nuevas pruebas manuales ni regeneración de imágenes. PR #6 permanece para revisión, sin fusionar.
+
+
+## D04 — Brand DNA real (2026-10-27)
+
+Rama feat/d04-brand-dna-editor desde main bbb54f9. Ruta privada de perfil, cuatro secciones editables, resumen desktop2/3+1/3/móvil vertical, historial reciente, snapshots de aprobación, logo no disponible. Navegación desde alta D02 completa y destino autorizado en AppShell; no selector/listado nuevo. Se conservan D02 público, creaciones inciertas y Auth. [Diseño y estados](design/d04-brand-dna.md), [seguridad/recuperación](d04-brand-dna.md).
+
+Guardado y aprobación separados mediante API/If-Match; datos del perfil y cinco campos mínimos. Journal de pestaña por cuenta/marca, identidad y permisos revalidados antes de enviar, bloqueo de doble submit y comparación explícita de versión. Conflicto sin merge, edición conservada, copia/descarga y carga confirmada de versión nueva; escrituras inciertas solo se concilian mediante lectura antes de cualquier reintento. No se alteran API, SQL, políticas o servicios.
+
+Primera integración real: [Actions 40584300887](https://github.com/leoomirelesss/holoai/actions/runs/40584300887), 41 checks D04 con dos usuarios locales, 34 D02 privados, 93 API y82 RPC/RLS correctos, cleanup confirmado; 12 contratos D04,10 D02 y31 API. Local: TypeScript, ESLint, build y34 regresiones desktop/móvil correctos; contraste58 pares/0 fallos. Capturas reales de borrador, aprobación, draft nuevo, conflicto y miembro revisadas: composición/tipografía consistentes y sin overflow. La cobertura de skeleton/errores/404 se amplió y se verificó en la aceptación final. No se escriben datos de prueba en linde-dev. PR #7 sin fusionar; esperar aprobación antes de siguientes módulos.
+
+
+### Aceptación final D04
+
+Código d3d7559, [Actions 40590747868](https://github.com/leoomirelesss/holoai/actions/runs/40590747868): **48 D04 +35 D02 privadas +93 API +82 RPC/RLS** correctas; contratos12 D04/10 D02/31 API, TypeScript, lint y build correctos. Limpieza confirmada; [JSON](dna-results.json), [ocho capturas](design/screenshots/d04/README.md). Local:34 regresiones desktop/móvil D01/D02 correctas,58 pares de contraste sin fallos AA. Se corrigieron dos hallazgos reales de accesibilidad/reflow y se reforzó el fixture de concurrencia D02 con HTTP200 y espera coherente con los presupuestos de red. No se desactivaron aserciones ni se sustituyó el stack real por simulaciones.
+
+D04 completo dentro del alcance autorizado; logo/Storage y siguientes módulos no disponibles. Ningún registro de prueba en Supabase remoto, sin cambios API/SQL/RLS/Auth ni servicios configurados. PR #7 abierto para revisión, sin fusionar. Esperar aprobación.

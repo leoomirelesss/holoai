@@ -25,6 +25,14 @@ on:
       - scripts/test-onboarding.mjs
       - tests/manual-operation.spec.ts
       - playwright.onboarding-contracts.config.mjs
+      - src/features/brand-dna/**
+      - src/app/app/brands/**
+      - src/components/layout/app-shell.tsx
+      - src/app/globals.css
+      - scripts/brand-dna/**
+      - scripts/test-dna.mjs
+      - tests/dna-model.spec.ts
+      - playwright.dna-contracts.config.mjs
       - package.json
       - package-lock.json
   workflow_dispatch:
@@ -55,7 +63,8 @@ jobs:
           printf '%s\n' '{"cli":"2.122.0","status":"failed","stage":"ci-preflight","checks":[],"cleanup":true}' > replica/supabase-integration-results.json
           cp replica/supabase-integration-results.json replica/brand-api-results.json
           cp replica/supabase-integration-results.json replica/onboarding-results.json
-          rm -f -- replica/clone-screens/D02-persistent-*.png
+          cp replica/supabase-integration-results.json replica/dna-results.json
+          rm -f -- replica/clone-screens/D02-persistent-*.png replica/clone-screens/D04-*.png
 
       - name: Node 24
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
@@ -107,6 +116,7 @@ jobs:
           npm run lint
           npm run test:api:contracts
           npm run test:onboarding:contracts
+          npm run test:dna:contracts
 
       - name: Run real local Supabase integration
         run: npm run test:supabase
@@ -191,3 +201,32 @@ jobs:
           if-no-files-found: error
           retention-days: 7
           include-hidden-files: false
+
+      - name: Real D04 Brand DNA with isolated Supabase
+        run: npm run test:dna
+
+      - name: Sanitize D04 evidence
+        id: dna_evidence
+        if: always()
+        env:
+          EXECUTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EXECUTION_SHA: ${{ github.sha }}
+        run: node scripts/supabase-integration/ci-evidence.mjs replica/dna-results.json
+
+      - name: Upload sanitized D04 JSON
+        if: ${{ always() && steps.dna_evidence.outputs.safe == 'true' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: brand-dna-sanitized
+          path: replica/dna-results.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload local D04 screenshots only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: brand-dna-screens
+          path: replica/clone-screens/D04-*.png
+          if-no-files-found: ignore
+          retention-days: 7

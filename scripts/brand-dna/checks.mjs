@@ -6,7 +6,8 @@ import { mkdir } from "node:fs/promises";
 
 export async function dnaChecks(stack, origin, connection, record) {
   if (origin !== "http://127.0.0.1:3100" || connection.url !== "http://127.0.0.1:55321") throw new Error("Local endpoints required");
-  async function check(name, fn) { let ok = false; try { ok = await fn() !== false; } catch { /* no raw browser/Auth errors */ } record(name, ok); if (!ok) throw new Error("D04 assertion failed"); }
+  let auditRule = "";
+  async function check(name, fn) { auditRule = ""; let ok = false; try { ok = await fn() !== false; } catch { /* no raw browser/Auth errors */ } record(auditRule ? `${name}-${auditRule}`.slice(0, 99) : name, ok); if (!ok) throw new Error("D04 assertion failed"); }
   const users = [];
   for (let i = 0; i < 2; i++) {
     const sdk = createClient(connection.url, connection.key, { auth: { persistSession: false, autoRefreshToken: false } });
@@ -31,7 +32,13 @@ export async function dnaChecks(stack, origin, connection, record) {
   const saveButton = () => page.getByRole("button", { name: "Guardar borrador", exact: true });
   async function saved() { await page.getByRole("status").filter({ hasText: /Perfil guardado\. Revisión/ }).waitFor(); }
   async function screenshot(name) { await page.evaluate(() => document.fonts.ready); await page.screenshot({ path: `replica/clone-screens/${name}`, fullPage: true }); }
-  const audit = async () => (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze()).violations.length === 0 && await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+  const audit = async () => {
+    const result = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
+    if (result.violations.length) { auditRule = `axe-${result.violations[0].id.replace(/[^a-z0-9-]/g, "").slice(0, 35)}`; return false; }
+    const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+    if (!fits) auditRule = "horizontal-overflow";
+    return fits;
+  };
   let id, workspaceId, url;
   try {
     await mkdir("replica/clone-screens", { recursive: true });

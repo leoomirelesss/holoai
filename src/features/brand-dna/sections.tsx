@@ -56,6 +56,6 @@ export function ProfileSummary({ form, full = false }: { form: DnaForm; full?: b
     <dl className="dna-facts"><dt>Idioma</dt><dd>{form.language || "Por completar"}</dd><dt>Voz</dt><dd>{form.tone || "Por completar"}</dd><dt>Audiencia</dt><dd>{form.audience || "Por completar"}</dd>
       {full && <><dt>Web del perfil</dt><dd>{form.website || "Sin definir"}</dd><dt>Tipografía</dt><dd>{form.font || "Sin definir"}</dd><dt>Colores</dt><dd>{form.colors.join(", ") || "Sin definir"}</dd><dt>Competidores</dt><dd>{form.competitors.length ? form.competitors.map(c => `${c.name}${c.website ? ` · ${c.website}` : ""}`).join("; ") : "Ninguno"}</dd></>}
     </dl>
-    {!full && <div className="dna-palette" aria-label="Colores de la edición local">{form.colors.filter(c => /^#[0-9a-f]{6}$/i.test(c)).map((c, i) => <span key={i} className="dna-swatch" role="img" aria-label={c} style={{ backgroundColor: c }} />)}</div>}
+    {!full && (form.colors.some(c => /^#[0-9a-f]{6}$/i.test(c)) ? <div className="dna-palette" role="group" aria-label="Colores de la edición local">{form.colors.filter(c => /^#[0-9a-f]{6}$/i.test(c)).map((c, i) => <span key={i} className="dna-swatch" role="img" aria-label={c} style={{ backgroundColor: c }} />)}</div> : <p className="field-hint">Sin colores válidos definidos.</p>)}
   </div>;
 }

@@ -223,10 +223,10 @@ jobs:
           retention-days: 7
 
       - name: Upload local D04 screenshots only
-        if: success()
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: brand-dna-screens
           path: replica/clone-screens/D04-*.png
-          if-no-files-found: error
+          if-no-files-found: ignore
           retention-days: 7
